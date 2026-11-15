@@ -18,15 +18,15 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794753988.3299797,
-    "seen": 1794754069.0828054,
-    "ast_hash": "58d37aeeadc5525a7777332930455b06",
+    "mtime": 1794755064.4295475,
+    "seen": 1794755176.2527373,
+    "ast_hash": "e0fb1959ef94c55cd69cc1495b4bd457",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794753988.3320003,
-    "seen": 1794754069.082807,
-    "ast_hash": "395f28216739d9a6d21429954e89c72b",
+    "mtime": 1794755064.4295475,
+    "seen": 1794755176.2527392,
+    "ast_hash": "7838ed33977bc5529796570fbfdc348d",
     "semantic_hash": ""
   },
   "src/app.js": {
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "docs/DESIGN.md": {
-    "mtime": 1794751936.9975863,
-    "seen": 1794751954.55498,
-    "ast_hash": "dafcb02625ca872124ccffd56976abf5",
+    "mtime": 1794754141.6915126,
+    "seen": 1794755176.252764,
+    "ast_hash": "abd6135317db5c4abe2378df963ed434",
     "semantic_hash": ""
   },
   "docs/PERSONAS.md": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "assets/media/furrow-thumb.webp": {
-    "mtime": 1794751891.579631,
-    "seen": 1794751954.554994,
-    "ast_hash": "7461d6d95263859d60ee885118bcc76b",
+    "mtime": 1794754936.2303383,
+    "seen": 1794755176.2527769,
+    "ast_hash": "a21a3c3da5263564a29413ac4dcdb814",
     "semantic_hash": ""
   },
   "assets/media/ledgerline-thumb.webp": {
@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "docs/research/SYNTHESIS.md": {
-    "mtime": 1794752754.6905806,
-    "seen": 1794753820.92374,
-    "ast_hash": "639bdc53f58e8500ab1ebba101cf658f",
+    "mtime": 1794755172.115394,
+    "seen": 1794755176.2527757,
+    "ast_hash": "2a9f2ed589498b46d6eb2c167686e56d",
     "semantic_hash": ""
   }
 }

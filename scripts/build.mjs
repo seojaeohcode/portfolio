@@ -71,24 +71,6 @@ const media = (p, base = '') => {
   return `<div class="media is-empty" role="img" aria-label="${esc(m.alt)}"></div>`;
 };
 
-// 대표 지표: 이름 → 전·후 같은 축 막대 → 측정 조건 (숫자 옆 조건 100%)
-const metric = m => {
-  const max = Math.max(m.before, m.after) || 1;
-  return `<div class="metric">
-      <p class="m-name">${esc(m.label)}<span>${m.better === 'lower' ? '적을수록 좋음' : '높을수록 좋음'}</span></p>
-      <p class="m-val"><span class="m-before">${m.before}${esc(m.unit)}</span><span class="m-arrow" aria-hidden="true">→</span><b>${m.after}<small>${esc(m.unit)}</small></b></p>
-      <div class="m-bars" aria-hidden="true"><i style="--w:${(m.before / max * 100).toFixed(1)}%"></i><i class="is-after" style="--w:${(m.after / max * 100).toFixed(1)}%"></i></div>
-      <p class="m-set">${esc(m.beforeLabel)} → ${esc(m.afterLabel)}. ${esc(m.set || '')}</p>
-    </div>`;
-};
-
-const awards = p => (p.outcomes || []).length ? `<ul class="awards">${p.outcomes.map(o => `<li class="${o.kind === 'award' && o.tier === 1 ? 'is-top' : ''}">${mk(o)}<span class="a-date">${fmt(o.date)}</span><span>${esc(o.title)} <b>${esc(o.prize)}</b>${o.rank ? ` (${esc(o.rank)})` : ''}${o.host ? ` <small>${esc(o.host)}</small>` : ''}</span></li>`).join('')}</ul>` : '';
-
-const impacts = (p, base = '') => `<div class="impact">
-    <h3>기술 선택이 바꾼 것</h3>
-    <ol>${p.decisions.map(d => `<li><p class="i-n"><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span></p><p class="i-d"><b>${esc(d.title)}</b><span>${esc(d.why)}</span></p>${d.basis ? `<p class="i-b">측정: ${esc(d.basis)}</p>` : ''}</li>`).join('')}</ol>
-  </div>`;
-
 const roleBlock = p => {
   const rs = (p.case && p.case.roleSplit) || [];
   const me = rs.find(r => r.who === '나'), team = rs.find(r => r.who !== '나');
@@ -96,21 +78,28 @@ const roleBlock = p => {
 };
 
 // ---------- 프로젝트 카드 (같은 틀 ×3) ----------
-const card = (p, i) => `
+// 카드 = 3층: 제목(문제→결과) / 숫자 하나 / 개조식 세 줄. 나머지 근거는 상세 페이지로.
+const card = (p, i) => {
+  const m = p.metric, me = ((p.case && p.case.roleSplit) || []).find(r => r.who === '나');
+  const key = p.decisions[0], won = (p.outcomes || []).some(o => o.kind === 'award');
+  return `
 <article class="proj" id="p-${p.id}" aria-labelledby="t-${p.id}">
   <div class="p-text">
-    <p class="p-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b><span>${esc(p.kname)}</span></p>
-    <p class="p-sub">${range(p)}<span>${esc(p.team)} 팀</span><span>${esc(p.status)}</span></p>
+    <p class="p-meta"><b>${no(i)} ${esc(p.name)}</b>${esc(p.kname)}, ${range(p)}, ${esc(p.team)} 팀</p>
     <h2 class="p-title" id="t-${p.id}">${esc(p.headline)}</h2>
-    ${roleBlock(p)}
     <p class="scene">${esc(p.scene)}</p>
-    ${metric(p.metric)}
-    ${awards(p)}
+    <p class="p-num"><span class="was">${m.before}${esc(m.unit)}</span><span class="arr" aria-hidden="true">→</span><b>${m.after}<small>${esc(m.unit)}</small></b><span class="what"><b>${esc(m.label)}</b>${m.set ? ` (${esc(m.set)})` : ''}${m.better === 'lower' ? ', 적을수록 좋음' : ''}</span></p>
+    ${m.second ? `<p class="p-second">${esc(m.second)}</p>` : ''}
+    <dl class="facts">
+      <div><dt>직접 만든 것</dt><dd>${esc([].concat(me ? me.what : p.role).join(', '))}</dd></div>
+      <div><dt>핵심 판단</dt><dd>${esc(key.title)} → <b>${esc(key.effectLabel)} ${esc(key.effect)}</b></dd></div>
+      ${(p.outcomes || []).length ? `<div><dt>${won ? '수상' : '공개'}</dt><dd>${p.outcomes.map(o => `<span class="aw">${mk(o)}${esc(o.title)} ${esc(o.prize)}${o.rank ? `(${esc(o.rank)})` : ''}</span>`).join('')}</dd></div>` : ''}
+    </dl>
+    <p class="p-links"><a class="go" href="work/${p.id}/">설계와 평가 과정 보기</a>${p.case && p.case.slides.length ? `<a href="work/${p.id}/#slides">발표자료 ${p.case.slides.length}쪽</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
   </div>
   <figure class="p-media"><div class="vwrap">${media(p)}</div>${p.media && p.media.caption ? `<figcaption>${esc(p.media.caption)}</figcaption>` : ''}</figure>
-  ${impacts(p)}
-  <p class="p-links"><a class="go" href="work/${p.id}/">${esc(p.more || '설계·평가 상세')}<small>상세 페이지</small></a>${p.case && p.case.slides.length ? `<a href="work/${p.id}/#slides">발표자료 ${p.case.slides.length}쪽 웹으로 보기</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
 </article>`;
+};
 
 function ledger() {
   const items = [...P.map(p => ({ date: p.end || nowYM, p })), ...(site.activities || []).map(a => ({ date: a.date, a }))]
