@@ -1,0 +1,8 @@
+node_modules/
+graphify-out/cache/
+.headroom/
+*.log
+.DS_Store
+tmp/
+dist/
+graphify-out/graph.html
