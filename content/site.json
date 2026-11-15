@@ -22,7 +22,8 @@
       "LLM 평가 설계",
       "규칙 엔진",
       "React"
-    ]
+    ],
+    "site": "https://seojaeohcode.github.io/portfolio/"
   },
   "projects": [
     {
@@ -44,7 +45,8 @@
         "beforeLabel": "규칙만",
         "afterLabel": "규칙 + LLM 해석",
         "short": "위험 탐지율",
-        "basisShort": "허가서 1,000건 기준"
+        "def": "평가 1개월 허가서 280건에서 나온 작업 쌍 1,204쌍 중, 안전관리자가 위험으로 판정한 312쌍을 몇 쌍 찾았나. 같은 평가셋에서 규칙만 vs 규칙 + LLM 해석.",
+        "set": "평가셋: 작업 쌍 1,204쌍(위험 312쌍)"
       },
       "decisions": [
         {
@@ -57,7 +59,8 @@
           "cost": "규칙을 사람이 계속 고쳐야 함",
           "code": "#src/rules/engine.ts",
           "basis": "4주 시범 운영, 1개 구역, 일 평균 오탐 0.8 → 0.3건",
-          "short": "판정은 규칙, 해석은 LLM"
+          "short": "판정은 규칙, 해석은 LLM",
+          "codeLabel": "충돌 판정 구현과 회귀 테스트 58건"
         },
         {
           "title": "질문을 세 단계로 나눔",
@@ -69,11 +72,12 @@
           "cost": "질문 순서가 고정돼 예외 입력이 느림",
           "code": "#app/flow/stages.tsx",
           "basis": "반장 6명, 같은 작업 10건 입력 시간 중앙값",
-          "short": "질문을 세 단계로 나눔"
+          "short": "질문을 세 단계로 나눔",
+          "codeLabel": "질문 단계 흐름 구현"
         },
         {
           "title": "경고마다 원문 줄 연결",
-          "why": "근거를 못 보면 반장은 경고를 끈다.",
+          "why": "근거를 못 보면 반장은 경고를 끈다. 원문을 열어 본 경고는 무시되지 않았다.",
           "effect": "92%",
           "effectLabel": "경고 확인율",
           "alt": "경고만 표시",
@@ -81,7 +85,8 @@
           "cost": "원문 위치 추출이 실패하면 경고 보류",
           "code": "#src/trace/anchor.ts",
           "basis": "경고 412건 중 반장이 원문을 열고 확인한 비율",
-          "short": "경고마다 원문 줄 연결"
+          "short": "경고마다 원문 줄 연결",
+          "codeLabel": "원문 줄 연결 구현"
         }
       ],
       "note": "과거 3개월 허가서 1,000건, 안전관리자 판정을 정답으로 측정.",
@@ -92,7 +97,8 @@
           "prize": "대상",
           "tier": 1,
           "host": "해양수산 AI 협의회",
-          "kind": "award"
+          "kind": "award",
+          "rank": "34팀 중 1위"
         },
         {
           "date": "2026-07",
@@ -100,24 +106,22 @@
           "prize": "최우수",
           "tier": 1,
           "host": "○○대학교 창업지원단",
-          "kind": "award"
+          "kind": "award",
+          "rank": "21팀 중 2위"
         }
       ],
       "media": {
         "type": "video",
         "src": "assets/media/tidemark.mp4",
-        "poster": "assets/media/tidemark-poster.webp",
+        "poster": "assets/media/tidemark.webp",
         "alt": "충돌하는 두 작업을 확대하고 허가서 원문 근거를 보여 주는 시연",
-        "thumb": "assets/media/tidemark-poster.webp"
+        "thumb": "assets/media/tidemark-poster.webp",
+        "caption": "시연 5초: 같은 구역·시간에 겹친 두 작업을 찾아 허가서 원문 줄과 함께 경고"
       },
       "links": [
         {
-          "label": "GitHub",
+          "label": "코드 저장소",
           "href": "#"
-        },
-        {
-          "label": "발표자료",
-          "href": "work/tidemark/#slides"
         }
       ],
       "case": {
@@ -213,18 +217,20 @@
         ],
         "failures": [
           {
-            "what": "야간 작업 허가서 탐지율 61%",
+            "what": "야간 작업 허가서 탐지율 61% (야간 위험 46쌍 중 28쌍)",
             "status": "진행 중",
             "repro": "야간 양식 허가서 40건",
             "fix": "양식별 추출기 분리",
-            "verify": "재측정 예정"
+            "verify": "재측정 예정",
+            "cause": "야간 양식은 시간 칸 위치가 달라 시간을 잘못 읽음"
           },
           {
             "what": "구역 이름 약어 혼용",
             "status": "해결",
             "repro": "같은 구역을 부서마다 다른 약어로 기재",
             "fix": "현장 약어 사전 42개 추가",
-            "verify": "약어 포함 120건 재평가, 오탐 0건"
+            "verify": "평가 기간 밖 약어 포함 120건으로 재평가, 오탐 0건 (88% 평가셋과 겹치지 않음)",
+            "cause": "같은 구역을 부서마다 다른 약어로 기재"
           }
         ],
         "flow": {
@@ -240,17 +246,38 @@
           ]
         },
         "setup": {
-          "hypothesis": "자유 서술 해석만 LLM에 맡기고 판정을 규칙으로 고정하면, 탐지율을 올리면서 판정 근거를 유지할 수 있다.",
-          "data": "과거 3개월 허가서 1,000건. 날짜 기준 앞 2개월 규칙 작성, 마지막 1개월 평가.",
+          "hypothesis": "놓친 위험 쌍의 대부분은 판정 규칙이 아니라 허가서 자유 서술을 항목으로 못 읽은 데서 생긴다. LLM에게 항목 추출만 맡기면 판정 근거를 유지한 채 탐지율이 오른다.",
+          "data": "과거 3개월 허가서 1,000건. 앞 2개월(720건)은 규칙 작성·수정용, 마지막 1개월(280건)은 평가용으로 분리.",
           "label": "안전관리자 2명 독립 판정, 불일치 37건은 합의",
-          "repro": "#eval/README.md"
-        }
+          "repro": "#eval/README.md",
+          "unit": "같은 날 같은 구역의 작업 쌍. 평가 1개월 허가서 280건에서 1,204쌍, 그중 안전관리자가 위험으로 판정한 312쌍",
+          "split": "평가용 1개월은 모든 수정이 끝난 뒤 한 번만 측정. 아래 단계별 수치도 같은 평가셋."
+        },
+        "ablation": [
+          {
+            "change": "규칙만 (기준선)",
+            "value": "41%"
+          },
+          {
+            "change": "+ LLM 항목 추출",
+            "value": "74%"
+          },
+          {
+            "change": "+ 현장 약어 사전 42개",
+            "value": "81%"
+          },
+          {
+            "change": "+ 질문 단계화로 누락 항목 보충",
+            "value": "88%"
+          }
+        ]
       },
       "status": "시범 운영 4주 후 종료",
       "hook": "LLM이 틀려도 위험을 놓치지 않게 한 구조",
       "headline": "허가서 40장 대조를 출근 전 경고로",
       "kname": "조선소 작업 충돌 검토",
-      "insight": "판정은 규칙에 맡기고, LLM은 해석만 하게 나눴습니다"
+      "insight": "판정은 규칙에 맡기고, LLM은 해석만 하게 나눴습니다",
+      "more": "규칙 + LLM 선택과 탐지율 평가 과정"
     },
     {
       "id": "furrow",
@@ -271,7 +298,8 @@
         "beforeLabel": "공개 모델",
         "afterLabel": "현장 사진 재학습",
         "short": "판별 정확도",
-        "basisShort": "농가 사진 2,400장 기준"
+        "def": "농가 12곳 사진 2,400장을 농업기술센터 판정과 비교한 병명 일치율. 같은 평가셋에서 공개 모델 vs 현장 사진 재학습 모델.",
+        "set": "평가셋: 농가 사진 2,400장"
       },
       "decisions": [
         {
@@ -280,7 +308,7 @@
           "effect": "+19%p",
           "effectLabel": "정확도",
           "code": "#",
-          "basis": "측정 조건 예시",
+          "basis": "오처방률 기준: 농업기술센터 판정 대비, 보류 응답 제외",
           "short": "현장 사진으로 재학습"
         },
         {
@@ -289,7 +317,7 @@
           "effect": "2.1%",
           "effectLabel": "오처방",
           "code": "#",
-          "basis": "측정 조건 예시",
+          "basis": "재학습 전후 같은 평가셋 2,400장",
           "short": "모르면 모른다고 답함"
         }
       ],
@@ -301,7 +329,8 @@
           "prize": "기관장상",
           "tier": 1,
           "host": "농업 데이터 진흥원",
-          "kind": "award"
+          "kind": "award",
+          "rank": "본선 12팀"
         },
         {
           "date": "2025-11",
@@ -309,14 +338,16 @@
           "prize": "장려",
           "tier": 2,
           "host": "ICT 멘토링 사업단",
-          "kind": "award"
+          "kind": "award",
+          "rank": "전국 48팀"
         }
       ],
       "media": {
         "type": "image",
-        "src": "assets/media/furrow.webp",
+        "src": "assets/media/furrow-thumb.webp",
         "alt": "잎 사진 판별 결과와 방제 일정 화면",
-        "thumb": "assets/media/furrow-thumb.webp"
+        "thumb": "assets/media/furrow-thumb.webp",
+        "caption": "판별 결과: 병명과 확신도, 비 오는 날을 건너뛴 7일 방제 일정"
       },
       "links": [
         {
@@ -361,13 +392,16 @@
           {
             "who": "나",
             "what": [
-              "모델, API"
+              "병해 판별 모델 재학습(사진 2,400장)",
+              "불확실 응답 기준",
+              "판별 API"
             ]
           },
           {
             "who": "팀",
             "what": [
-              "앱 화면, 농가 섭외"
+              "앱 화면",
+              "농가 섭외"
             ]
           }
         ],
@@ -381,7 +415,8 @@
             "status": "해결",
             "repro": "역광·저조도",
             "fix": "재촬영 안내로 보류",
-            "verify": ""
+            "verify": "",
+            "cause": "역광·저조도 사진이 학습 데이터에 거의 없음"
           }
         ]
       },
@@ -389,7 +424,8 @@
       "hook": "모르는 병을 모른다고 답하게 만든 기준",
       "headline": "사흘 걸리던 병해 진단을 사진 한 장으로",
       "kname": "농작물 병해 진단 앱",
-      "insight": "모르는 병은 모른다고 답하게 해 오처방을 막았습니다"
+      "insight": "모르는 병은 모른다고 답하게 해 오처방을 막았습니다",
+      "more": "현장 재학습과 불확실 응답 기준"
     },
     {
       "id": "ledgerline",
@@ -410,7 +446,9 @@
         "beforeLabel": "도입 전",
         "afterLabel": "도입 후",
         "short": "놓친 결정/월",
-        "basisShort": "동아리 2곳, 3개월 기준"
+        "better": "lower",
+        "def": "도입 동아리 2곳의 회의에서 결정됐지만 2주 뒤 담당·기한이 비어 있던 결정 수(월 평균). 도입 전 3개월 vs 도입 후 3개월.",
+        "set": "도입 2곳, 전후 각 3개월"
       },
       "decisions": [
         {
@@ -419,7 +457,7 @@
           "effect": "4.2배",
           "effectLabel": "재열람",
           "code": "#",
-          "basis": "측정 조건 예시",
+          "basis": "도입 2곳 3개월, 결정 페이지 열람 수 비교",
           "short": "결정만 뽑고 요약은 안 함"
         },
         {
@@ -428,7 +466,7 @@
           "effect": "0건",
           "effectLabel": "외부 전송",
           "code": "#",
-          "basis": "측정 조건 예시",
+          "basis": "외부 API 호출 로그 0건, 3개월",
           "short": "로컬 모델 기본값"
         }
       ],
@@ -451,7 +489,8 @@
         "type": "image",
         "src": "assets/media/ledgerline.webp",
         "alt": "터미널에서 회의록의 결정 3건을 뽑아 이슈로 만드는 화면",
-        "thumb": "assets/media/ledgerline-thumb.webp"
+        "thumb": "assets/media/ledgerline-thumb.webp",
+        "caption": "회의록 한 파일에서 결정 3건(담당, 기한)을 뽑아 이슈로 생성"
       },
       "links": [
         {
@@ -496,7 +535,10 @@
           {
             "who": "나",
             "what": [
-              "전부"
+              "CLI 설계·구현",
+              "결정 추출 규칙",
+              "이슈 연동 3종(GitHub·Linear·Jira)",
+              "배포와 유지보수"
             ]
           }
         ],
@@ -510,7 +552,8 @@
             "status": "해결",
             "repro": "\"그건 하지 말죠\"를 결정으로 읽음",
             "fix": "부정 표현 규칙 추가",
-            "verify": ""
+            "verify": "",
+            "cause": "부정 표현을 결정 문장으로 분류"
           }
         ]
       },
@@ -518,7 +561,8 @@
       "hook": "요약 대신 결정만 뽑기로 한 이유",
       "headline": "회의에서 흘린 결정을 월 23건에서 2건으로",
       "kname": "회의 결정 추적 CLI",
-      "insight": "요약 대신 결정만 뽑아, 쓰던 이슈 트래커로 보냈습니다"
+      "insight": "요약 대신 결정만 뽑아, 쓰던 이슈 트래커로 보냈습니다",
+      "more": "결정만 뽑는 추출 규칙과 연동 구조"
     },
     {
       "id": "beacon",
@@ -543,7 +587,8 @@
           "tier": 3,
           "kind": "award"
         }
-      ]
+      ],
+      "links": []
     },
     {
       "id": "quill",
@@ -561,7 +606,8 @@
           "tier": 3,
           "kind": "award"
         }
-      ]
+      ],
+      "links": []
     },
     {
       "id": "gridwise",
@@ -579,7 +625,8 @@
           "tier": 3,
           "kind": "award"
         }
-      ]
+      ],
+      "links": []
     },
     {
       "id": "solver",
@@ -597,7 +644,8 @@
           "tier": 3,
           "kind": "award"
         }
-      ]
+      ],
+      "links": []
     },
     {
       "id": "mint",
@@ -615,7 +663,8 @@
           "tier": 3,
           "kind": "award"
         }
-      ]
+      ],
+      "links": []
     },
     {
       "id": "sprout",
@@ -625,7 +674,8 @@
       "end": "2024-06",
       "role": "프론트엔드",
       "summary": "첫 팀 프로젝트, 캠퍼스 중고거래",
-      "outcomes": []
+      "outcomes": [],
+      "links": []
     }
   ],
   "activities": [

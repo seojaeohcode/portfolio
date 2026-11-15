@@ -18,21 +18,21 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794751891.77863,
-    "seen": 1794751954.5549126,
-    "ast_hash": "30e61bd41a94fd054869f0ab34120010",
+    "mtime": 1794753742.0287302,
+    "seen": 1794753820.923687,
+    "ast_hash": "ddd36e43fba60f0b0695e5c5eabab4e5",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794751891.7796288,
-    "seen": 1794751954.554917,
-    "ast_hash": "6b8373e3a4f61e64074713041074d62b",
+    "mtime": 1794753742.0297399,
+    "seen": 1794753820.923689,
+    "ast_hash": "823fcd5988c23b42f18f387976a12be4",
     "semantic_hash": ""
   },
   "src/app.js": {
-    "mtime": 1794748876.4558914,
-    "seen": 1794749034.036612,
-    "ast_hash": "587ff35f6c80e8a8723d755c5e64182f",
+    "mtime": 1794753742.0327342,
+    "seen": 1794753820.9236908,
+    "ast_hash": "5db5f9551570a989e09280911e59aed0",
     "semantic_hash": ""
   },
   "tools/cx.sh": {
@@ -156,9 +156,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/pages.yml": {
-    "mtime": 1794746857.6759958,
-    "seen": 1794747063.580017,
-    "ast_hash": "1ed0091e5bc69b58e8e950fb1ca4fe4d",
+    "mtime": 1794752995.8176818,
+    "seen": 1794753820.9236844,
+    "ast_hash": "86434e8c4fef331696170582b6ebffd0",
     "semantic_hash": ""
   },
   "assets/media/furrow.webp": {
@@ -219,6 +219,42 @@
     "mtime": 1794751413.7052197,
     "seen": 1794751954.5550237,
     "ast_hash": "36abd70b8c49a217deeb5a9ad6be3cfa",
+    "semantic_hash": ""
+  },
+  "docs/research/A-hr.md": {
+    "mtime": 1794752541.2431736,
+    "seen": 1794753820.923732,
+    "ast_hash": "1b7ed28e60b21f93731a14dcdc014e45",
+    "semantic_hash": ""
+  },
+  "docs/research/B-tech.md": {
+    "mtime": 1794752538.6477802,
+    "seen": 1794753820.9237337,
+    "ast_hash": "d64d44b430918ef91604320648b8f247",
+    "semantic_hash": ""
+  },
+  "docs/research/C-hired.md": {
+    "mtime": 1794752581.0556643,
+    "seen": 1794753820.9237354,
+    "ast_hash": "d27c7b8bd397d7cee7d362c738f2e281",
+    "semantic_hash": ""
+  },
+  "docs/research/D-theory.md": {
+    "mtime": 1794752535.8007252,
+    "seen": 1794753820.9237366,
+    "ast_hash": "db66fd3c053756e8246f8e25f40bb7d1",
+    "semantic_hash": ""
+  },
+  "docs/research/E-korean-ui.md": {
+    "mtime": 1794752565.093297,
+    "seen": 1794753820.9237385,
+    "ast_hash": "72a4606be2404d2f065e2af829fe9420",
+    "semantic_hash": ""
+  },
+  "docs/research/SYNTHESIS.md": {
+    "mtime": 1794752754.6905806,
+    "seen": 1794753820.92374,
+    "ast_hash": "639bdc53f58e8500ab1ebba101cf658f",
     "semantic_hash": ""
   }
 }

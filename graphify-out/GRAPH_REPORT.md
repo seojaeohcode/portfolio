@@ -1,17 +1,17 @@
 # Graph Report - 포폴  (2026-11-15)
 
 ## Corpus Check
-- 26 files · ~34,612 words
+- 32 files · ~48,644 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 8, .css 1)
 
 ## Summary
-- 258 nodes · 282 edges · 23 communities (19 shown, 4 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.92)
+- 366 nodes · 398 edges · 29 communities (25 shown, 4 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4bbdcb0d`
+- Built from commit: `52e24dd2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,18 +38,24 @@
 - deploy
 - pages.yml
 - portfolio
+- 포트폴리오 웹사이트의 전달력: 이론·근거·검증 규칙
+- 공개 원문 12개
+- 대상별 분석
+- 한국 IT 기술 면접관이 포트폴리오·이력서·GitHub에서 보는 것
+- 한국 기업은 신입·주니어 개발자 이력서와 포트폴리오를 어떻게 보는가
+- 조사 종합 → v3 설계 규칙
 
 ## God Nodes (most connected - your core abstractions)
 1. `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` - 18 edges
-2. `설계서 — 포트폴리오 양식 v2 (한국 기준)` - 13 edges
-3. `Quick Rules — Monolith Fast Path 전용 (v2.0)` - 13 edges
-4. `esc()` - 11 edges
-5. `Humanizer: remove AI writing patterns` - 11 edges
-6. `Flow` - 9 edges
-7. `tasteskill 2.5` - 9 edges
-8. `casePage()` - 8 edges
-9. `신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나` - 8 edges
-10. `C. Inflation and borrowed authority` - 8 edges
+2. `esc()` - 17 edges
+3. `대상별 분석` - 15 edges
+4. `공개 원문 12개` - 13 edges
+5. `Quick Rules — Monolith Fast Path 전용 (v2.0)` - 13 edges
+6. `설계서 — 포트폴리오 양식 v2 (한국 기준)` - 13 edges
+7. `Humanizer: remove AI writing patterns` - 11 edges
+8. `포트폴리오 웹사이트의 전달력: 이론·근거·검증 규칙` - 10 edges
+9. `card()` - 9 edges
+10. `casePage()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` --references--> `still()`  [INFERRED]
@@ -66,11 +72,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (23 total, 4 thin omitted)
+## Communities (29 total, 4 thin omitted)
 
 ### Community 0 - "build.mjs"
 Cohesion: 0.10
-Nodes (33): 1. 원리별 측정 가능한 기준, 2. 코드에서 확인한 위반·위험, 3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정, 다크 테마 한국어 포트폴리오 인간공학 감사, 직접 열어 확인한 출처, awardsLine(), casePage(), chapter() (+25 more)
+Nodes (38): 1. 원리별 측정 가능한 기준, 2. 코드에서 확인한 위반·위험, 3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정, 다크 테마 한국어 포트폴리오 인간공학 감사, 직접 열어 확인한 출처, awards(), bar(), card() (+30 more)
 
 ### Community 1 - "Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)"
 Cohesion: 0.08
@@ -129,12 +135,12 @@ Cohesion: 0.40
 Nodes (4): Before you write, Levels, Ponytail, The smallest complete change
 
 ### Community 15 - "app.js"
-Cohesion: 0.25
-Nodes (8): f, io, map, reduce, shots, still(), to, toEl
+Cohesion: 0.29
+Nodes (7): f, io, map, reduce, still(), to, toEl
 
 ### Community 20 - "deploy"
 Cohesion: 0.12
-Nodes (17): runs-on, steps, environment, needs, runs-on, steps, name, url (+9 more)
+Nodes (18): runs-on, steps, environment, needs, runs-on, steps, name, url (+10 more)
 
 ### Community 21 - "pages.yml"
 Cohesion: 0.15
@@ -144,25 +150,49 @@ Nodes (12): concurrency, cancel-in-progress, group, name, on, push, workflow_dis
 Cohesion: 0.40
 Nodes (4): portfolio, 구조, 내용 넣는 법 (프로젝트 1개), 작업 방식 (로컬 디스크 절약)
 
+### Community 23 - "포트폴리오 웹사이트의 전달력: 이론·근거·검증 규칙"
+Cohesion: 0.05
+Nodes (36): 1.1 시각 위계: 중요도 차이를 지각 가능한 차이로 바꾼다, 1.2 게슈탈트: 근접·유사·공통 영역·연속성·도형/배경, 1.3 타이포 위계: 크기보다 역할의 일관성, 1.4 그리드·여백: 관계를 정렬하고 검색 위치를 고정한다, 1. 시각 위계·게슈탈트·타이포 위계·그리드·여백, 2.1 F 패턴은 고정 배치도가 아니라 특정 읽기 행동이다, 2.2 국내 연구와 Z 패턴: 과제·언어·레이아웃을 함께 봐야 한다, 2.3 레이어케이크: 제목만 훑어도 내용을 고를 수 있게 한다 (+28 more)
+
+### Community 24 - "공개 원문 12개"
+Cohesion: 0.09
+Nodes (22): 01. 이도현 — 토스 iOS 신입 합격 확인, 02. mjin.park — 카카오, 3년차 주니어 이직 합격 확인, 03. 정종윤·재그지그 — 네이버 신입 공채 합격, 현재는 경력 누적본, 04. 강다혜·rhei — 카카오 FE 인턴 합격 확인, 05. 정현수 — 당근마켓 FE 코어팀 인턴 재직 확인, 06. 강철민 — 루닛 Research Engineer 경력 확인, AI 연구형 비교, 07. 이정윤·promm — 당근·LINE Financial+ 경력형 추천 사례, 08. 함종현 — 토스 Server Developer 경력 확인, 추천 이력서 (+14 more)
+
+### Community 25 - "대상별 분석"
+Cohesion: 0.10
+Nodes (19): 10. 점핏 이력서 — 관리 행동을 분명하게 표시, 11. 카카오 채용 — 열람 실패로 제외, 12. 네이버 채용 — 비교할 속성을 고정, 13. 배민 디자인 시스템 글 — 변경 전후와 차이를 함께, 14. 뱅크샐러드 리포트 — 기간을 정하고 대표 값을 읽기, 1. 토스 앱 — 요약 금액 → 구성비 → 상세 목록, 2. 토스 채용 — 검색할 조건을 먼저 제공, 3. 토스피드 — 제목에 상황, 부제에 맥락 (+11 more)
+
+### Community 26 - "한국 IT 기술 면접관이 포트폴리오·이력서·GitHub에서 보는 것"
+Cohesion: 0.22
+Nodes (8): 1. 출처별 요약 표, 2. 공통 패턴: 무엇이 면접에서 더 알아볼 이유가 되는가, 3. 직무별 차이: 같은 프로젝트라도 강조할 증거가 다르다, 4. 포트폴리오 웹사이트 설계에 바로 쓰는 시사점, 감점·신뢰 저하 신호와 근거 강도, 성과 수치는 어떻게 검증 대상으로 바뀌는가, 한국 IT 기술 면접관이 포트폴리오·이력서·GitHub에서 보는 것, 해석의 경계
+
+### Community 27 - "한국 기업은 신입·주니어 개발자 이력서와 포트폴리오를 어떻게 보는가"
+Cohesion: 0.25
+Nodes (7): 1. 출처별 핵심 발언 요약, 2. 국내 서류 검토 시간: 비교 가능한 것과 아닌 것, 3. 공통 패턴, 4. 상충 의견과 적용 판단, 5. 근거의 빈틈과 조사 범위, 포트폴리오 웹사이트 설계에 바로 쓰는 시사점, 한국 기업은 신입·주니어 개발자 이력서와 포트폴리오를 어떻게 보는가
+
+### Community 28 - "조사 종합 → v3 설계 규칙"
+Cohesion: 0.33
+Nodes (5): v3 구조, 검수 기준, 이전 버전이 실패한 이유, 조사 종합 → v3 설계 규칙, 조사가 말하는 것 (여러 갈래에서 반복된 것만)
+
 ## Knowledge Gaps
 - **1 isolated node(s):** `PATH`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 183 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 267 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Humanizer: remove AI writing patterns` connect `Humanizer: remove AI writing patterns` to `C. Inflation and borrowed authority`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **What connects `PATH` to the rest of the system?**
   _1 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `build.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.10099573257467995 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09966777408637874 - nodes in this community are weakly interconnected._
 - **Why does `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` connect `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` to `Quick Rules — Monolith Fast Path 전용 (v2.0)`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **Should `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
-- **Why does `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` connect `build.mjs` to `app.js`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Should `Humanizer: remove AI writing patterns` be split into smaller, more focused modules?**
   _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
+- **Should `Quick Rules — Monolith Fast Path 전용 (v2.0)` be split into smaller, more focused modules?**
+  _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

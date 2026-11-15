@@ -3,16 +3,6 @@ const to = new URLSearchParams(location.search).get('to');
 const toEl = document.querySelector('.to');
 if (to && toEl) { const b = document.createElement('b'); b.textContent = to.slice(0, 40); toEl.append(b, '께 드리는 포트폴리오입니다.'); toEl.hidden = false; }
 
-// 첫 화면: 줄에 마우스를 올리거나 초점을 주면 오른쪽 화면이 그 프로젝트로 바뀐다
-const shots = document.querySelectorAll('.show-media img');
-document.querySelectorAll('.lead a').forEach(a => {
-  const on = () => {
-    shots.forEach(s => s.classList.toggle('is-on', s.dataset.i === a.dataset.i));
-    document.querySelectorAll('.lead a').forEach(x => x.classList.toggle('is-on', x === a));
-  };
-  a.addEventListener('mouseenter', on); a.addEventListener('focus', on);
-});
-
 // 성과 지도: 화면에 들어올 때 한 번 그린다
 const map = document.querySelector('.map');
 if (map && !('IntersectionObserver' in window)) map.classList.add('is-in');
@@ -28,6 +18,14 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 // 사용자가 직접 멈추면 다시 보이더라도 자동 재생하지 않는다
 document.querySelectorAll('video.media').forEach(v => {
   io.observe(v);
+  // 기본 컨트롤 대신 화면을 가리지 않는 일시정지/재생 버튼 하나 (5초 넘는 자동 재생의 정지 수단)
+  const b = v.nextElementSibling;
+  if (b && b.classList.contains('vbtn')) {
+    b.hidden = false;
+    const sync = () => { b.textContent = v.paused ? '재생' : '일시정지'; b.setAttribute('aria-label', `시연 영상 ${b.textContent}`); };
+    b.addEventListener('click', () => { if (v.paused) { delete v.dataset.userPaused; v.play().catch(() => {}); } else v.pause(); });
+    v.addEventListener('play', sync); v.addEventListener('pause', sync); sync();
+  }
   v.addEventListener('pause', () => { if (v.dataset.auto) delete v.dataset.auto; else v.dataset.userPaused = '1'; });
 });
 

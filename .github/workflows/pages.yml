@@ -12,6 +12,14 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: node scripts/build.mjs
+      # 웹과 같은 데이터로 PDF 이력서 생성 (/resume/ → resume.pdf)
+      - name: resume.pdf
+        run: |
+          python3 -m http.server 8080 -d dist >/dev/null 2>&1 &
+          sleep 1
+          google-chrome --headless=new --no-sandbox --disable-gpu --no-pdf-header-footer --virtual-time-budget=8000 \
+            --print-to-pdf=dist/resume.pdf http://localhost:8080/resume/
+          test -s dist/resume.pdf
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:
