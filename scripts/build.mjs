@@ -22,6 +22,7 @@ const host = o => o.host ? ` <small class="host">(${esc(o.host)})</small>` : '';
 const link = (href, label, cls = '') => !href || href === '#' ? '' : href.startsWith('#') && href.length > 1 ? `<code class="${cls}">${esc(href.slice(1))}</code>` : `<a class="${cls}" href="${esc(href)}">${esc(label)}</a>`;
 
 const P = site.projects;
+const thumb = p => p.media && (p.media.type === 'video' ? p.media.poster : p.media.src);
 const outcomes = P.flatMap(p => (p.outcomes || []).map(o => ({ ...o, project: p })));
 const isAward = o => o.kind === 'award' && o.tier <= 2;
 const stats = {
@@ -111,6 +112,7 @@ const strip = p => `
     <div class="strip-text">
       <p class="scene">${esc(p.scene)}</p>
       <p class="summary">${esc(p.summary)}</p>
+      <p class="hook"><a class="go" href="work/${p.id}/">${esc(p.hook)}</a></p>
       ${metric(p.metric)}
     </div>
     <div class="strip-media">${media(p)}</div>
@@ -118,7 +120,7 @@ const strip = p => `
   ${decisions(p)}
   <footer class="strip-foot">
     <p class="note">${esc(p.note)}</p>
-    <p class="links"><a class="go" href="work/${p.id}/">${esc(p.hook)}</a>${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
+    <p class="links">${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
   </footer>
 </article>`;
 
@@ -176,8 +178,8 @@ const home = page({
   <p class="who">${esc(site.person.name)}<span>${esc(site.person.field)}</span><span>${esc(site.person.affiliation)}</span><span>${esc(site.person.grad)}</span></p>
   <h1>${esc(site.person.thesis)}</h1>
   <ol class="lead">
-${P.filter(p => p.featured).map(p => `    <li><a href="#p-${p.id}">
-      <span class="lead-thumb">${p.media && p.media.src ? `<img src="${esc(p.media.src)}" alt="" width="168" height="105">` : ''}</span>
+${P.filter(p => p.featured).map(p => `    <li><a href="work/${p.id}/">
+      <span class="lead-thumb">${thumb(p) ? `<img src="${esc(thumb(p))}" alt="" width="168" height="105">` : ''}</span>
       <span class="lead-name">${esc(p.name)}<small>${range(p)}</small></span>
       <span class="lead-line">${esc(p.headline)}</span>
       <span class="lead-num"><b>${p.metric.after}<small>${esc(p.metric.unit)}</small></b><span>${esc(p.metric.label)}, 이전 ${p.metric.before}${esc(p.metric.unit)}</span></span>
@@ -186,13 +188,13 @@ ${P.filter(p => p.featured).map(p => `    <li><a href="#p-${p.id}">
   </ol>
 </header>
 <main>
-  <section class="wrap" aria-label="성과 지도">${outcomeMap()}</section>
   <section class="wrap" aria-labelledby="h-work">
     <h2 id="h-work" class="sec">대표 작업</h2>
     ${P.filter(p => p.featured).map(strip).join('\n')}
   </section>
   <section class="wrap ledger" aria-labelledby="h-all">
     <h2 id="h-all" class="sec">전체 기록</h2>
+    ${outcomeMap()}
     ${ledger()}
   </section>
 </main>`,
@@ -229,7 +231,7 @@ ${c.flow ? `
     <div class="ba">${['before', 'after'].map(k => `<div class="ba-${k}"><p>${k === 'before' ? '전' : '후'}</p><ol>${c.flow[k].map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}</div>
   </section>` : ''}
   <section class="case-sec"><h2>구조 <span class="by-key">${['AI', '규칙', '사람'].map(b => `<span class="by" data-by="${b}">${b}</span>`).join('')}</span></h2>
-    <ol class="flow">${c.architecture.map(n => `<li><b>${esc(n.name)}</b><span class="by" data-by="${esc(n.by)}">${esc(n.by)}</span><span>${esc(n.detail)}</span>${n.fallback ? `<span class="fb"><em>예외</em>${esc(n.fallback)}</span>` : ''}</li>`).join('')}</ol>
+    <ol class="flow">${c.architecture.map(n => `<li${n.mine ? ' class="is-mine"' : ''}><b>${esc(n.name)}</b><span class="by" data-by="${esc(n.by)}">${esc(n.by)}</span><span>${esc(n.detail)}</span>${n.fallback ? `<span class="fb"><em>예외</em>${esc(n.fallback)}</span>` : ''}${n.myChange ? `<span class="fb is-me"><em>내 작업</em>${esc(n.myChange)}</span>` : ''}</li>`).join('')}</ol>
   </section>
 
   <section class="case-sec"><h2>설계 결정과 효과</h2>
@@ -242,16 +244,17 @@ ${c.flow ? `
   </section>
 
   <section class="case-sec"><h2>검증</h2>
-    <table class="eval"><thead><tr><th scope="col">항목</th><th scope="col">결과</th><th scope="col">조건</th></tr></thead>
-    <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td>${esc(e.value)}</td><td>${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
+${c.setup ? `    <dl class="setup"><div><dt>가설</dt><dd>${esc(c.setup.hypothesis)}</dd></div><div><dt>데이터</dt><dd>${esc(c.setup.data)}</dd></div><div><dt>정답</dt><dd>${esc(c.setup.label)}</dd></div>${c.setup.repro ? `<div><dt>재현</dt><dd>${link(c.setup.repro, '재현 방법')}</dd></div>` : ''}</dl>` : ''}
+    <table class="eval"><thead><tr><th scope="col">항목</th><th scope="col">기준선</th><th scope="col">변경 후</th><th scope="col">조건</th></tr></thead>
+    <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td class="${e.baseline ? 'base' : 'none'}">${esc(e.baseline || '미측정')}</td><td>${esc(e.result || '미측정')}</td><td>${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
   </section>
 ${(c.failures || []).length ? `
   <section class="case-sec"><h2>안 된 것</h2>
-    <ul class="fail">${c.failures.map(x => `<li><b>${esc(x.what)}</b><span>${esc(x.why)}</span><span><em>다음</em>${esc(x.next)}</span></li>`).join('')}</ul>
+    <ul class="fail">${c.failures.map(x => `<li><b>${esc(x.what)}<span class="st" data-st="${esc(x.status)}">${esc(x.status)}</span></b><span><em>재현</em>${esc(x.repro)}</span><span><em>조치</em>${esc(x.fix)}</span><span><em>검증</em>${esc(x.verify || '미검증')}</span></li>`).join('')}</ul>
   </section>` : ''}
 
   <section class="case-sec"><h2>역할</h2>
-    <div class="split">${c.roleSplit.map(r => `<span class="${r.who === '나' ? 'me' : ''}" style="--w:${r.share}%"><b>${esc(r.who)} ${r.share}%</b>${esc(r.what)}</span>`).join('')}</div>
+    <div class="split">${c.roleSplit.map(r => `<div class="${r.who === '나' ? 'me' : ''}"><b>${esc(r.who)}</b><ul>${[].concat(r.what).map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>`).join('')}</div>
   </section>
 ${c.slides.length ? `
   <section class="case-sec" id="slides"><h2>발표자료</h2>
