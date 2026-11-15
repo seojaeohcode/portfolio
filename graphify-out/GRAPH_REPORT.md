@@ -1,14 +1,19 @@
 # Graph Report - 포폴  (2026-11-15)
 
 ## Corpus Check
-- 22 files · ~30,716 words
+- 23 files · ~30,787 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 8 file(s) not represented in the graph (top: (none) 7, .css 1)
+- Unclassified: 9 file(s) not represented in the graph (top: (none) 8, .css 1)
 
 ## Summary
-- 198 nodes · 213 edges · 20 communities (16 shown, 4 thin omitted)
+- 230 nodes · 245 edges · 22 communities (18 shown, 4 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `462daf30`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - build.mjs
@@ -30,6 +35,8 @@
 - cx.sh
 - CLAUDE.md
 - .claude/CLAUDE.md
+- deploy
+- pages.yml
 
 ## God Nodes (most connected - your core abstractions)
 1. `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` - 18 edges
@@ -41,7 +48,7 @@
 7. `설계서 — 포트폴리오 양식 v1` - 9 edges
 8. `strip()` - 8 edges
 9. `casePage()` - 8 edges
-10. `C. Inflation and borrowed authority` - 8 edges
+10. `신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -49,11 +56,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (20 total, 4 thin omitted)
+## Communities (22 total, 4 thin omitted)
 
 ### Community 0 - "build.mjs"
-Cohesion: 0.15
-Nodes (24): casePage(), chips(), copy(), decisions(), esc(), fmt(), home, isAward() (+16 more)
+Cohesion: 0.14
+Nodes (26): casePage(), chips(), copy(), decisions(), esc(), fmt(), home, isAward() (+18 more)
 
 ### Community 1 - "Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)"
 Cohesion: 0.08
@@ -115,22 +122,32 @@ Nodes (4): Before you write, Levels, Ponytail, The smallest complete change
 Cohesion: 0.40
 Nodes (4): f, io, to, toEl
 
+### Community 20 - "deploy"
+Cohesion: 0.12
+Nodes (17): runs-on, steps, environment, needs, runs-on, steps, name, url (+9 more)
+
+### Community 21 - "pages.yml"
+Cohesion: 0.15
+Nodes (12): concurrency, cancel-in-progress, group, name, on, push, workflow_dispatch, permissions (+4 more)
+
 ## Knowledge Gaps
 - **1 isolated node(s):** `PATH`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 153 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 170 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Humanizer: remove AI writing patterns` connect `Humanizer: remove AI writing patterns` to `C. Inflation and borrowed authority`, `B. Rhythm by rule`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
 - **What connects `PATH` to the rest of the system?**
   _1 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `build.mjs` be split into smaller, more focused modules?**
+  _Cohesion score 0.13793103448275862 - nodes in this community are weakly interconnected._
+- **Why does `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` connect `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` to `Quick Rules — Monolith Fast Path 전용 (v2.0)`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
 - **Should `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
-- **Why does `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` connect `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` to `Quick Rules — Monolith Fast Path 전용 (v2.0)`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Should `Humanizer: remove AI writing patterns` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
 - **Should `Quick Rules — Monolith Fast Path 전용 (v2.0)` be split into smaller, more focused modules?**

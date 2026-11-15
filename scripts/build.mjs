@@ -12,7 +12,9 @@ const nowYM = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2,
 const esc = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ym = s => { const [y, m] = s.split('-').map(Number); return y * 12 + (m - 1); };
 const fmt = s => s ? s.replace('-', '.') : '진행 중';
-const TIER = { 1: '상위 수상', 2: '수상', 3: '본선·수료·참가' };
+const range = p => `${fmt(p.start)} ~ ${fmt(p.end)}`;
+const TIER = { 1: '상위 수상', 2: '수상', 3: '본선, 수료, 참가' };
+const meta = (...xs) => `<p class="meta">${xs.filter(Boolean).map(x => `<span>${x}</span>`).join('')}</p>`;
 const mark = t => `<i class="mk t${t}" aria-hidden="true"></i>`;
 
 const P = site.projects;
@@ -47,8 +49,8 @@ ${rows.map((p, i) => {
     const last = Math.max(+pct(end), ...(p.outcomes || []).map(o => +pct(o.date)));
     // 상위 수상 이름은 항상 표시: 오른쪽 공간이 부족하면 선의 왼쪽에 붙인다
     const label = tops.length ? (last > 55
-      ? `<span class="row-top is-left" style="--x:${pct(p.start)}%">${tops.map(o => `${esc(o.title)} ${esc(o.prize)}`).join(' · ')}</span>`
-      : `<span class="row-top" style="--x:${last}%">${tops.map(o => `${esc(o.title)} ${esc(o.prize)}`).join(' · ')}</span>`) : '';
+      ? `<span class="row-top is-left" style="--x:${pct(p.start)}%">${tops.map(o => `${esc(o.title)} ${esc(o.prize)}`).join(', ')}</span>`
+      : `<span class="row-top" style="--x:${last}%">${tops.map(o => `${esc(o.title)} ${esc(o.prize)}`).join(', ')}</span>`) : '';
     return `    <li class="row${p.featured ? ' is-featured' : ''}${p.end ? '' : ' is-open'}" style="--i:${rows.length - i}">
       <a href="${p.featured ? `#p-${p.id}` : `#r-${p.id}`}">
         <span class="row-name">${esc(p.name)}</span>
@@ -57,7 +59,7 @@ ${rows.map((p, i) => {
 ${(p.outcomes || []).map(o => `          <span class="row-mk" style="--x:${pct(o.date)}%">${mark(o.tier)}${o.tier === 1 ? '' : `<span class="row-tip">${esc(o.title)} ${esc(o.prize)}</span>`}</span>`).join('\n')}
           ${label}
         </span>
-        <span class="sr">${esc(p.name)}, ${fmt(p.start)}–${fmt(p.end)}${(p.outcomes || []).map(o => `, ${o.title} ${o.prize}`).join('')}</span>
+        <span class="sr">${esc(p.name)}, ${range(p)}${(p.outcomes || []).map(o => `, ${o.title} ${o.prize}`).join('')}</span>
       </a>
     </li>`;
   }).join('\n')}
@@ -97,7 +99,7 @@ const strip = p => `
 <article class="strip" id="p-${p.id}">
   <header class="strip-head">
     ${logo(p)}
-    <div><h3>${esc(p.name)}</h3><p class="meta">${fmt(p.start)}–${fmt(p.end)} · ${esc(p.team)} · 내 담당 ${esc(p.role)}</p></div>
+    <div><h3>${esc(p.name)}</h3>${meta(`${range(p)}`, esc(p.team), `내 담당 ${esc(p.role)}`)}</div>
     ${chips(p)}
   </header>
   <p class="status">${esc(p.status)}</p>
@@ -130,7 +132,7 @@ function ledger() {
   ${Object.keys(byYear).sort().reverse().map(y => `<section class="year"><h3>${y}</h3><ul>
 ${byYear[y].map(x => x.a
     ? `    <li data-c="act"><span class="l-date">${fmt(x.a.date)}</span><span class="l-name">${esc(x.a.title)}</span><span class="l-what">${esc(x.a.detail)}</span><span class="l-out"></span></li>`
-    : `    <li data-c="${cat(x)}" id="r-${x.p.id}"><span class="l-date">${fmt(x.p.start)}–${fmt(x.p.end)}</span><span class="l-name">${x.p.featured ? `<a href="work/${x.p.id}/">${esc(x.p.name)}</a>` : esc(x.p.name)}</span><span class="l-what">${esc(x.p.summary)}<em>${esc(x.p.role)}</em></span><span class="l-out">${(x.p.outcomes || []).map(o => `<span>${mark(o.tier)}${esc(o.prize)}</span>`).join('')}</span></li>`).join('\n')}
+    : `    <li data-c="${cat(x)}" id="r-${x.p.id}"><span class="l-date">${range(x.p)}</span><span class="l-name">${x.p.featured ? `<a href="work/${x.p.id}/">${esc(x.p.name)}</a>` : esc(x.p.name)}</span><span class="l-what">${esc(x.p.summary)}<em>${esc(x.p.role)}</em></span><span class="l-out">${(x.p.outcomes || []).map(o => `<span>${mark(o.tier)}${esc(o.prize)}</span>`).join('')}</span></li>`).join('\n')}
   </ul></section>`).join('\n')}`;
 }
 
@@ -154,7 +156,7 @@ const page = ({ title, desc, base, body }) => `<!doctype html>
 <body>
 ${body}
 <footer class="site-foot wrap">
-  <p>${esc(site.person.name)} · ${esc(site.person.affiliation)}</p>
+  <p>${esc(site.person.name)}, ${esc(site.person.affiliation)}</p>
   <p>${site.person.links.map(l => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}<span>${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')} 갱신</span></p>
 </footer>
 </body>
@@ -162,12 +164,12 @@ ${body}
 `;
 
 const home = page({
-  title: `${site.person.name} — 포트폴리오`,
+  title: `${site.person.name} 포트폴리오`,
   desc: site.person.thesis,
   base: '',
   body: `<header class="hero wrap">
   <p class="to" hidden></p>
-  <p class="who">${esc(site.person.name)}<span>${esc(site.person.field)}</span><span>${esc(site.person.affiliation)} · ${esc(site.person.grad)}</span></p>
+  <p class="who">${esc(site.person.name)}<span>${esc(site.person.field)}</span><span>${esc(site.person.affiliation)}</span><span>${esc(site.person.grad)}</span></p>
   <h1>${esc(site.person.thesis)}</h1>
   <dl class="stats">
     <div><dt>상위 수상</dt><dd>${stats.top}</dd></div>
@@ -191,7 +193,7 @@ const casePage = p => {
   const c = p.case;
   const base = '../../';
   return page({
-    title: `${p.name} — ${site.person.name}`,
+    title: `${p.name}, ${site.person.name}`,
     desc: p.summary,
     base,
     body: `<nav class="crumb wrap"><a href="${base}#p-${p.id}">← ${esc(site.person.name)}</a></nav>
@@ -199,7 +201,7 @@ const casePage = p => {
   <header class="case-head">
     ${logo(p)}
     <h1>${esc(p.name)}</h1>
-    <p class="meta">${fmt(p.start)}–${fmt(p.end)} · ${esc(p.team)} · 내 담당 ${esc(p.role)} · ${esc(p.status)}</p>
+    ${meta(`${range(p)}`, esc(p.team), `내 담당 ${esc(p.role)}`, esc(p.status))}
     ${chips(p)}
   </header>
   <p class="scene is-lead">${esc(p.scene)}</p>
@@ -217,15 +219,15 @@ ${c.flow ? `
   <section class="case-sec"><h2>도입 전과 후</h2>
     <div class="ba">${['before', 'after'].map(k => `<div class="ba-${k}"><p>${k === 'before' ? '전' : '후'}</p><ol>${c.flow[k].map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}</div>
   </section>` : ''}
-  <section class="case-sec"><h2>구조 <span class="by-key">${['AI', '규칙', '사람'].map(b => `<i class="by" data-by="${b}">${b}</i>`).join('')}</span></h2>
-    <ol class="flow">${c.architecture.map(n => `<li><b>${esc(n.name)}</b><i class="by" data-by="${esc(n.by)}">${esc(n.by)}</i><span>${esc(n.detail)}</span></li>`).join('')}</ol>
+  <section class="case-sec"><h2>구조 <span class="by-key">${['AI', '규칙', '사람'].map(b => `<span class="by" data-by="${b}">${b}</span>`).join('')}</span></h2>
+    <ol class="flow">${c.architecture.map(n => `<li><b>${esc(n.name)}</b><span class="by" data-by="${esc(n.by)}">${esc(n.by)}</span><span>${esc(n.detail)}</span></li>`).join('')}</ol>
   </section>
 
   <section class="case-sec"><h2>설계 결정과 효과</h2>
     <ol class="dx">${p.decisions.map(d => `<li>
       <p class="d-effect"><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span></p>
       <h3>${esc(d.title)}</h3>
-      <dl>${d.alt ? `<div><dt>버린 대안</dt><dd>${esc(d.alt)} — ${esc(d.altWhy)}</dd></div>` : ''}<div><dt>이유</dt><dd>${esc(d.why)}</dd></div>${d.cost ? `<div><dt>감수한 것</dt><dd>${esc(d.cost)}</dd></div>` : ''}</dl>
+      <dl>${d.alt ? `<div><dt>버린 대안</dt><dd>${esc(d.alt)}: ${esc(d.altWhy)}</dd></div>` : ''}<div><dt>이유</dt><dd>${esc(d.why)}</dd></div>${d.cost ? `<div><dt>감수한 것</dt><dd>${esc(d.cost)}</dd></div>` : ''}</dl>
       ${d.code ? `<a class="code" href="${esc(d.code)}">코드 보기</a>` : ''}
     </li>`).join('')}</ol>
   </section>
@@ -236,7 +238,7 @@ ${c.flow ? `
   </section>
 ${(c.failures || []).length ? `
   <section class="case-sec"><h2>안 된 것</h2>
-    <ul class="fail">${c.failures.map(x => `<li><b>${esc(x.what)}</b><span>${esc(x.why)}</span><span>→ ${esc(x.next)}</span></li>`).join('')}</ul>
+    <ul class="fail">${c.failures.map(x => `<li><b>${esc(x.what)}</b><span>${esc(x.why)}</span><span><em>다음</em>${esc(x.next)}</span></li>`).join('')}</ul>
   </section>` : ''}
 
   <section class="case-sec"><h2>역할</h2>
