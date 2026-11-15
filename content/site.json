@@ -14,8 +14,15 @@
         "href": "mailto:hello@example.com"
       }
     ],
-    "field": "AI 서비스 개발",
-    "grad": "2027.02 졸업 예정"
+    "field": "LLM 서비스 개발",
+    "grad": "2027.02 졸업 예정",
+    "stack": [
+      "Python",
+      "FastAPI",
+      "LLM 평가 설계",
+      "규칙 엔진",
+      "React"
+    ]
   },
   "projects": [
     {
@@ -25,9 +32,9 @@
       "start": "2026-03",
       "end": "2026-07",
       "team": "4인",
-      "role": "전체 개발, 평가 설계",
+      "role": "규칙 엔진, LLM 해석, 평가 설계",
       "featured": true,
-      "scene": "반장은 매일 아침 작업허가서 40장을 손으로 겹쳐 보며 같은 시간 같은 구역에서 충돌할 작업을 찾는다.",
+      "scene": "반장은 매일 아침 허가서 40장을 손으로 겹쳐 본다.",
       "summary": "작업계획서와 허가서를 읽고 함께 하면 위험한 작업 쌍을 출근 전에 알려 주는 검토 도구.",
       "metric": {
         "label": "위험 작업 쌍 탐지율",
@@ -35,7 +42,9 @@
         "after": 88,
         "unit": "%",
         "beforeLabel": "규칙만",
-        "afterLabel": "규칙 + LLM 해석"
+        "afterLabel": "규칙 + LLM 해석",
+        "short": "위험 탐지율",
+        "basisShort": "허가서 1,000건 기준"
       },
       "decisions": [
         {
@@ -47,7 +56,8 @@
           "altWhy": "판정 이유를 법규 조항으로 설명할 수 없음",
           "cost": "규칙을 사람이 계속 고쳐야 함",
           "code": "#src/rules/engine.ts",
-          "basis": "4주 시범 운영, 1개 구역, 일 평균 오탐 0.8 → 0.3건"
+          "basis": "4주 시범 운영, 1개 구역, 일 평균 오탐 0.8 → 0.3건",
+          "short": "판정은 규칙, 해석은 LLM"
         },
         {
           "title": "질문을 세 단계로 나눔",
@@ -58,7 +68,8 @@
           "altWhy": "현장 휴대폰·장갑 환경에서 입력 포기",
           "cost": "질문 순서가 고정돼 예외 입력이 느림",
           "code": "#app/flow/stages.tsx",
-          "basis": "반장 6명, 같은 작업 10건 입력 시간 중앙값"
+          "basis": "반장 6명, 같은 작업 10건 입력 시간 중앙값",
+          "short": "질문을 세 단계로 나눔"
         },
         {
           "title": "경고마다 원문 줄 연결",
@@ -69,7 +80,8 @@
           "altWhy": "근거 없는 경고는 꺼짐",
           "cost": "원문 위치 추출이 실패하면 경고 보류",
           "code": "#src/trace/anchor.ts",
-          "basis": "경고 412건 중 반장이 원문을 열고 확인한 비율"
+          "basis": "경고 412건 중 반장이 원문을 열고 확인한 비율",
+          "short": "경고마다 원문 줄 연결"
         }
       ],
       "note": "과거 3개월 허가서 1,000건, 안전관리자 판정을 정답으로 측정.",
@@ -92,9 +104,11 @@
         }
       ],
       "media": {
-        "type": "image",
-        "src": "assets/media/tidemark.webp",
-        "alt": "작업 목록에서 충돌하는 두 작업이 강조된 화면"
+        "type": "video",
+        "src": "assets/media/tidemark.mp4",
+        "poster": "assets/media/tidemark-poster.webp",
+        "alt": "충돌하는 두 작업을 확대하고 허가서 원문 근거를 보여 주는 시연",
+        "thumb": "assets/media/tidemark-poster.webp"
       },
       "links": [
         {
@@ -234,7 +248,9 @@
       },
       "status": "시범 운영 4주 후 종료",
       "hook": "LLM이 틀려도 위험을 놓치지 않게 한 구조",
-      "headline": "허가서 40장 수작업 대조를 출근 전 자동 경고로"
+      "headline": "허가서 40장 대조를 출근 전 경고로",
+      "kname": "조선소 작업 충돌 검토",
+      "insight": "판정은 규칙에 맡기고, LLM은 해석만 하게 나눴습니다"
     },
     {
       "id": "furrow",
@@ -243,9 +259,9 @@
       "start": "2025-06",
       "end": "2025-11",
       "team": "3인",
-      "role": "모델 학습, 백엔드",
+      "role": "병해 판별 모델, API",
       "featured": true,
-      "scene": "고추 농가는 잎에 반점이 보이면 사진을 찍어 단체 대화방에 올리고, 답을 기다리는 사이 사흘이 지난다.",
+      "scene": "잎에 반점이 보이면, 농가는 사흘을 기다린다.",
       "summary": "잎 사진 한 장으로 병해를 판별하고 날씨를 반영해 방제 날짜까지 정해 주는 앱.",
       "metric": {
         "label": "병해 판별 정확도",
@@ -253,7 +269,9 @@
         "after": 91,
         "unit": "%",
         "beforeLabel": "공개 모델",
-        "afterLabel": "현장 사진 재학습"
+        "afterLabel": "현장 사진 재학습",
+        "short": "판별 정확도",
+        "basisShort": "농가 사진 2,400장 기준"
       },
       "decisions": [
         {
@@ -262,7 +280,8 @@
           "effect": "+19%p",
           "effectLabel": "정확도",
           "code": "#",
-          "basis": "측정 조건 예시"
+          "basis": "측정 조건 예시",
+          "short": "현장 사진으로 재학습"
         },
         {
           "title": "모르면 모른다고 답함",
@@ -270,15 +289,8 @@
           "effect": "2.1%",
           "effectLabel": "오처방",
           "code": "#",
-          "basis": "측정 조건 예시"
-        },
-        {
-          "title": "강수 예보로 날짜 조정",
-          "why": "비 오기 전 방제는 씻겨 나간다.",
-          "effect": "−1.4회",
-          "effectLabel": "재방제",
-          "code": "#",
-          "basis": "측정 조건 예시"
+          "basis": "측정 조건 예시",
+          "short": "모르면 모른다고 답함"
         }
       ],
       "note": "농가 12곳 사진 2,400장, 농업기술센터 판정을 정답으로 측정.",
@@ -303,7 +315,8 @@
       "media": {
         "type": "image",
         "src": "assets/media/furrow.webp",
-        "alt": "잎 사진 판별 결과와 방제 일정 화면"
+        "alt": "잎 사진 판별 결과와 방제 일정 화면",
+        "thumb": "assets/media/furrow-thumb.webp"
       },
       "links": [
         {
@@ -374,7 +387,9 @@
       },
       "status": "농가 12곳 사용 중",
       "hook": "모르는 병을 모른다고 답하게 만든 기준",
-      "headline": "사흘 기다리던 병해 진단을 사진 한 장으로"
+      "headline": "사흘 걸리던 병해 진단을 사진 한 장으로",
+      "kname": "농작물 병해 진단 앱",
+      "insight": "모르는 병은 모른다고 답하게 해 오처방을 막았습니다"
     },
     {
       "id": "ledgerline",
@@ -383,9 +398,9 @@
       "start": "2025-01",
       "end": "",
       "team": "1인",
-      "role": "설계, 개발, 유지보수",
+      "role": "설계부터 배포까지 혼자",
       "featured": true,
-      "scene": "회의가 끝나면 모두 결정했다고 기억하지만, 2주 뒤 누가 무엇을 하기로 했는지는 아무도 같은 답을 하지 않는다.",
+      "scene": "회의에서 정한 일은 2주 뒤 아무도 같은 답을 못 한다.",
       "summary": "회의록에서 결정과 담당자를 뽑아 이슈로 만들고 기한이 지나면 다시 묻는 오픈소스 CLI.",
       "metric": {
         "label": "놓친 결정 (월)",
@@ -393,7 +408,9 @@
         "after": 2,
         "unit": "건",
         "beforeLabel": "도입 전",
-        "afterLabel": "도입 후"
+        "afterLabel": "도입 후",
+        "short": "놓친 결정/월",
+        "basisShort": "동아리 2곳, 3개월 기준"
       },
       "decisions": [
         {
@@ -402,15 +419,8 @@
           "effect": "4.2배",
           "effectLabel": "재열람",
           "code": "#",
-          "basis": "측정 조건 예시"
-        },
-        {
-          "title": "이슈 트래커로 바로 보냄",
-          "why": "새 도구는 안 쓴다. 쓰던 곳에 넣는다.",
-          "effect": "3곳",
-          "effectLabel": "연동",
-          "code": "#",
-          "basis": "측정 조건 예시"
+          "basis": "측정 조건 예시",
+          "short": "결정만 뽑고 요약은 안 함"
         },
         {
           "title": "로컬 모델 기본값",
@@ -418,7 +428,8 @@
           "effect": "0건",
           "effectLabel": "외부 전송",
           "code": "#",
-          "basis": "측정 조건 예시"
+          "basis": "측정 조건 예시",
+          "short": "로컬 모델 기본값"
         }
       ],
       "note": "도입한 동아리 2곳의 3개월 회의록 기준.",
@@ -439,7 +450,8 @@
       "media": {
         "type": "image",
         "src": "assets/media/ledgerline.webp",
-        "alt": "터미널에서 회의록의 결정 3건을 뽑아 이슈로 만드는 화면"
+        "alt": "터미널에서 회의록의 결정 3건을 뽑아 이슈로 만드는 화면",
+        "thumb": "assets/media/ledgerline-thumb.webp"
       },
       "links": [
         {
@@ -504,7 +516,9 @@
       },
       "status": "공개, 유지보수 중",
       "hook": "요약 대신 결정만 뽑기로 한 이유",
-      "headline": "회의에서 흘린 결정을 월 23건에서 2건으로"
+      "headline": "회의에서 흘린 결정을 월 23건에서 2건으로",
+      "kname": "회의 결정 추적 CLI",
+      "insight": "요약 대신 결정만 뽑아, 쓰던 이슈 트래커로 보냈습니다"
     },
     {
       "id": "beacon",

@@ -18,15 +18,15 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794747874.8464322,
-    "seen": 1794748086.2673736,
-    "ast_hash": "fc36af2fefe96aff44c608f9c9291b86",
+    "mtime": 1794751891.77863,
+    "seen": 1794751954.5549126,
+    "ast_hash": "30e61bd41a94fd054869f0ab34120010",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794748866.8569837,
-    "seen": 1794749034.0366092,
-    "ast_hash": "c3ca6d64f2e4eff414319250129ce59e",
+    "mtime": 1794751891.7796288,
+    "seen": 1794751954.554917,
+    "ast_hash": "6b8373e3a4f61e64074713041074d62b",
     "semantic_hash": ""
   },
   "src/app.js": {
@@ -42,9 +42,9 @@
     "semantic_hash": ""
   },
   "tools/shot.ps1": {
-    "mtime": 1794746800.3929834,
-    "seen": 1794746846.5549083,
-    "ast_hash": "2371cfa03258c7ec1d0e74df1b8eb1a7",
+    "mtime": 1794751949.1425571,
+    "seen": 1794751954.5549304,
+    "ast_hash": "25b01d0fc818fb3919e7c6d872991d38",
     "semantic_hash": ""
   },
   ".agents/skills/frontend-design/LICENSE.txt": {
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "docs/DESIGN.md": {
-    "mtime": 1794749020.3328407,
-    "seen": 1794749034.036643,
-    "ast_hash": "f3ea7bc1e27a39331e55a7371d07ef6e",
+    "mtime": 1794751936.9975863,
+    "seen": 1794751954.55498,
+    "ast_hash": "dafcb02625ca872124ccffd56976abf5",
     "semantic_hash": ""
   },
   "docs/PERSONAS.md": {
@@ -195,6 +195,30 @@
     "mtime": 1794748754.738003,
     "seen": 1794749034.036644,
     "ast_hash": "ba2d99e66a1af7fb4eba3bbe3cf4ed29",
+    "semantic_hash": ""
+  },
+  "assets/media/furrow-thumb.webp": {
+    "mtime": 1794751891.579631,
+    "seen": 1794751954.554994,
+    "ast_hash": "7461d6d95263859d60ee885118bcc76b",
+    "semantic_hash": ""
+  },
+  "assets/media/ledgerline-thumb.webp": {
+    "mtime": 1794751891.6706588,
+    "seen": 1794751954.555001,
+    "ast_hash": "780720f87b7226e3c32c94817ca10e04",
+    "semantic_hash": ""
+  },
+  "assets/media/tidemark-poster.webp": {
+    "mtime": 1794751909.8138435,
+    "seen": 1794751954.5550075,
+    "ast_hash": "cecc4d0c16cb30cb0e3158c00acdb3cf",
+    "semantic_hash": ""
+  },
+  "assets/media/tidemark.mp4": {
+    "mtime": 1794751413.7052197,
+    "seen": 1794751954.5550237,
+    "ast_hash": "36abd70b8c49a217deeb5a9ad6be3cfa",
     "semantic_hash": ""
   }
 }

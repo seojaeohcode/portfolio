@@ -1,17 +1,17 @@
 # Graph Report - 포폴  (2026-11-15)
 
 ## Corpus Check
-- 26 files · ~34,389 words
+- 26 files · ~34,612 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 8, .css 1)
 
 ## Summary
-- 258 nodes · 293 edges · 24 communities (20 shown, 4 thin omitted)
+- 258 nodes · 282 edges · 23 communities (19 shown, 4 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `efff722c`
+- Built from commit: `4bbdcb0d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -38,28 +38,27 @@
 - deploy
 - pages.yml
 - portfolio
-- 다크 테마 한국어 포트폴리오 인간공학 감사
 
 ## God Nodes (most connected - your core abstractions)
 1. `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` - 18 edges
-2. `esc()` - 14 edges
+2. `설계서 — 포트폴리오 양식 v2 (한국 기준)` - 13 edges
 3. `Quick Rules — Monolith Fast Path 전용 (v2.0)` - 13 edges
-4. `Humanizer: remove AI writing patterns` - 11 edges
-5. `casePage()` - 10 edges
-6. `설계서 — 포트폴리오 양식 v1` - 10 edges
-7. `strip()` - 9 edges
-8. `Flow` - 9 edges
-9. `tasteskill 2.5` - 9 edges
-10. `신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나` - 8 edges
+4. `esc()` - 11 edges
+5. `Humanizer: remove AI writing patterns` - 11 edges
+6. `Flow` - 9 edges
+7. `tasteskill 2.5` - 9 edges
+8. `casePage()` - 8 edges
+9. `신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나` - 8 edges
+10. `C. Inflation and borrowed authority` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `2. 코드에서 확인한 위반·위험` --references--> `outcomeMap()`  [INFERRED]
-  docs/ERGONOMICS.md → scripts/build.mjs
-- `2. 코드에서 확인한 위반·위험` --references--> `page()`  [INFERRED]
-  docs/ERGONOMICS.md → scripts/build.mjs
 - `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` --references--> `still()`  [INFERRED]
   docs/ERGONOMICS.md → src/app.js
+- `2. 코드에서 확인한 위반·위험` --references--> `outcomeMap()`  [INFERRED]
+  docs/ERGONOMICS.md → scripts/build.mjs
 - `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` --references--> `media()`  [INFERRED]
+  docs/ERGONOMICS.md → scripts/build.mjs
+- `2. 코드에서 확인한 위반·위험` --references--> `page()`  [INFERRED]
   docs/ERGONOMICS.md → scripts/build.mjs
 - `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` --references--> `page()`  [INFERRED]
   docs/ERGONOMICS.md → scripts/build.mjs
@@ -67,11 +66,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (24 total, 4 thin omitted)
+## Communities (23 total, 4 thin omitted)
 
 ### Community 0 - "build.mjs"
-Cohesion: 0.12
-Nodes (32): 3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정, casePage(), chips(), copy(), decisions(), esc(), F, fmt() (+24 more)
+Cohesion: 0.10
+Nodes (33): 1. 원리별 측정 가능한 기준, 2. 코드에서 확인한 위반·위험, 3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정, 다크 테마 한국어 포트폴리오 인간공학 감사, 직접 열어 확인한 출처, awardsLine(), casePage(), chapter() (+25 more)
 
 ### Community 1 - "Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)"
 Cohesion: 0.08
@@ -98,8 +97,8 @@ Cohesion: 0.20
 Nodes (9): 1. The kind of business decides everything, 2. The page plan by kind, 3. What serves which page, 4. The run, 5. Checklist, 6. Never, House rules, References (+1 more)
 
 ### Community 7 - "설계서 — 포트폴리오 양식 v1"
-Cohesion: 0.18
-Nodes (10): 0. 한 문장, 1. 읽는 시간별 설계 (정보 위계), 2. 시그니처 시각화: 성과 지도, 3. 대표 작업 스트립 (카드 반복 금지), 4. 시각 언어, 5. 감성 설계 (심장을 울리는 부분), 6. 공학적 장치, 7. 금지 목록 (+2 more)
+Cohesion: 0.14
+Nodes (13): 0. 한 문장, 1. 읽는 시간별 설계 (정보 위계), 2. 시그니처 시각화: 성과 지도, 3. 대표 작업 스트립 (카드 반복 금지), 4. 시각 언어, 5. 감성 설계 (심장을 울리는 부분), 6. 공학적 장치, 7. 금지 목록 (+5 more)
 
 ### Community 8 - "신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나"
 Cohesion: 0.22
@@ -145,13 +144,9 @@ Nodes (12): concurrency, cancel-in-progress, group, name, on, push, workflow_dis
 Cohesion: 0.40
 Nodes (4): portfolio, 구조, 내용 넣는 법 (프로젝트 1개), 작업 방식 (로컬 디스크 절약)
 
-### Community 23 - "다크 테마 한국어 포트폴리오 인간공학 감사"
-Cohesion: 0.40
-Nodes (4): 1. 원리별 측정 가능한 기준, 2. 코드에서 확인한 위반·위험, 다크 테마 한국어 포트폴리오 인간공학 감사, 직접 열어 확인한 출처
-
 ## Knowledge Gaps
 - **1 isolated node(s):** `PATH`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 180 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 183 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -162,12 +157,12 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `PATH` to the rest of the system?**
   _1 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `build.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.12380952380952381 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10099573257467995 - nodes in this community are weakly interconnected._
 - **Why does `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` connect `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` to `Quick Rules — Monolith Fast Path 전용 (v2.0)`?**
   _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **Should `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
-- **Why does `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` connect `build.mjs` to `다크 테마 한국어 포트폴리오 인간공학 감사`, `app.js`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `3. 수정 우선순위 Top 10 — 제안만 기록, 코드 미수정` connect `build.mjs` to `app.js`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Should `Humanizer: remove AI writing patterns` be split into smaller, more focused modules?**
   _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
