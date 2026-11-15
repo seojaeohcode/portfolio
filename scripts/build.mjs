@@ -22,6 +22,7 @@ const host = o => o.host ? ` <small class="host">(${esc(o.host)})</small>` : '';
 const link = (href, label, cls = '') => !href || href === '#' ? '' : href.startsWith('#') && href.length > 1 ? `<code class="${cls}">${esc(href.slice(1))}</code>` : `<a class="${cls}" href="${esc(href)}">${esc(label)}</a>`;
 
 const P = site.projects;
+const F = site.projects.filter(p => p.featured);
 const thumb = p => p.media && (p.media.type === 'video' ? p.media.poster : p.media.src);
 const outcomes = P.flatMap(p => (p.outcomes || []).map(o => ({ ...o, project: p })));
 const isAward = o => o.kind === 'award' && o.tier <= 2;
@@ -46,6 +47,7 @@ function outcomeMap() {
     <span>성과 지도 <small>수상 ${stats.awards}회, 그중 상위 ${stats.top}회</small></span>
     <span class="legend">${[1, 2, 3, 'x'].map(t => `<span>${mark(t)}${TIER[t]}</span>`).join('')}</span>
   </figcaption>
+  <div class="map-body">
   <div class="map-grid" aria-hidden="true">${years.map(y => `<span style="--x:${((y * 12 - a) / span * 100).toFixed(2)}%">${y}</span>`).join('')}</div>
   <ol class="map-rows">
 ${rows.map((p, i) => {
@@ -69,6 +71,7 @@ ${(p.outcomes || []).map(o => `          <span class="row-mk" style="--x:${pct(o
     </li>`;
   }).join('\n')}
   </ol>
+  </div>
 </figure>`;
 }
 
@@ -94,7 +97,7 @@ const media = (p, base = '') => {
 };
 
 const decisions = p => `<ol class="decisions">
-${p.decisions.map(d => `    <li><p class="d-effect"><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span></p><h4>${esc(d.title)}</h4><p class="d-why">${esc(d.why)}</p>${d.basis ? `<p class="d-basis">${esc(d.basis)}</p>` : ''}</li>`).join('\n')}
+${p.decisions.map(d => `    <li><h4>${esc(d.title)}</h4><p class="d-effect"><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span></p><p class="d-why">${esc(d.why)}</p>${d.basis ? `<p class="d-basis">${esc(d.basis)}</p>` : ''}</li>`).join('\n')}
   </ol>`;
 
 const chips = p => (p.outcomes || []).length ? `<ul class="chips">${p.outcomes.map(o => `<li>${mk(o)}<span>${fmt(o.date)} ${esc(o.title)}</span> <b>${esc(o.prize)}</b>${host(o)}</li>`).join('')}</ul>` : '';
@@ -104,7 +107,7 @@ const strip = p => `
 <article class="strip" id="p-${p.id}">
   <header class="strip-head">
     ${logo(p)}
-    <div><h3>${esc(p.name)}</h3>${meta(`${range(p)}`, esc(p.team), `내 담당 ${esc(p.role)}`)}</div>
+    <div><h3><a href="work/${p.id}/">${esc(p.name)}</a></h3>${meta(`${range(p)}`, esc(p.team), `내 담당 ${esc(p.role)}`)}</div>
     ${chips(p)}
   </header>
   <p class="status">${esc(p.status)}</p>
@@ -177,15 +180,18 @@ const home = page({
   <p class="to" hidden></p>
   <p class="who">${esc(site.person.name)}<span>${esc(site.person.field)}</span><span>${esc(site.person.affiliation)}</span><span>${esc(site.person.grad)}</span></p>
   <h1>${esc(site.person.thesis)}</h1>
+  <div class="show">
   <ol class="lead">
-${P.filter(p => p.featured).map(p => `    <li><a href="work/${p.id}/">
+${F.map((p, i) => `    <li><a href="work/${p.id}/" data-i="${i}">
       <span class="lead-thumb">${thumb(p) ? `<img src="${esc(thumb(p))}" alt="" width="168" height="105">` : ''}</span>
       <span class="lead-name">${esc(p.name)}<small>${range(p)}</small></span>
       <span class="lead-line">${esc(p.headline)}</span>
-      <span class="lead-num"><b>${p.metric.after}<small>${esc(p.metric.unit)}</small></b><span>${esc(p.metric.label)}, 이전 ${p.metric.before}${esc(p.metric.unit)}</span></span>
-      <span class="lead-out">${(p.outcomes || []).map(o => `<span>${mk(o)}${esc(o.title)} ${esc(o.prize)}</span>`).join('')}</span>
+      <span class="lead-num"><span>${esc(p.metric.label)}</span><b><s>${p.metric.before}</s> ${p.metric.after}<small>${esc(p.metric.unit)}</small></b></span>
+      <span class="lead-out">${(p.outcomes || []).map(o => `<span>${mk(o)}${esc(o.title)} ${esc(o.prize)}</span>`).join('')}<span class="lead-more">설계와 검증 보기</span></span>
     </a></li>`).join('\n')}
   </ol>
+  <div class="show-media" aria-hidden="true">${F.map((p, i) => thumb(p) ? `<img src="${esc(thumb(p))}" alt="" class="${i ? '' : 'is-on'}" data-i="${i}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>` : '').join('')}</div>
+  </div>
 </header>
 <main>
   <section class="wrap" aria-labelledby="h-work">
