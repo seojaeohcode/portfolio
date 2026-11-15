@@ -24,15 +24,15 @@
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794747988.873495,
-    "seen": 1794748086.2673757,
-    "ast_hash": "88e7068a1f4b3ec83eb4eefcdaaad334",
+    "mtime": 1794748866.8569837,
+    "seen": 1794749034.0366092,
+    "ast_hash": "c3ca6d64f2e4eff414319250129ce59e",
     "semantic_hash": ""
   },
   "src/app.js": {
-    "mtime": 1794748004.3680081,
-    "seen": 1794748086.267377,
-    "ast_hash": "3448999c74b617ff79687bf291e4cce6",
+    "mtime": 1794748876.4558914,
+    "seen": 1794749034.036612,
+    "ast_hash": "587ff35f6c80e8a8723d755c5e64182f",
     "semantic_hash": ""
   },
   "tools/cx.sh": {
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "docs/DESIGN.md": {
-    "mtime": 1794746410.3105505,
-    "seen": 1794746846.5549226,
-    "ast_hash": "c9452bf3cd494dbeb0dcc8454d45858d",
+    "mtime": 1794749020.3328407,
+    "seen": 1794749034.036643,
+    "ast_hash": "f3ea7bc1e27a39331e55a7371d07ef6e",
     "semantic_hash": ""
   },
   "docs/PERSONAS.md": {
@@ -183,6 +183,18 @@
     "mtime": 1794747102.214356,
     "seen": 1794748086.2674036,
     "ast_hash": "f93078681a51cd2431a42bdb24b5291b",
+    "semantic_hash": ""
+  },
+  "tools/ergo-audit.js": {
+    "mtime": 1794748271.1637397,
+    "seen": 1794749034.036619,
+    "ast_hash": "6e3ce60fc1e8a1527302e30bdc2f0c47",
+    "semantic_hash": ""
+  },
+  "docs/ERGONOMICS.md": {
+    "mtime": 1794748754.738003,
+    "seen": 1794749034.036644,
+    "ast_hash": "ba2d99e66a1af7fb4eba3bbe3cf4ed29",
     "semantic_hash": ""
   }
 }

@@ -163,6 +163,7 @@ const page = ({ title, desc, base, body }) => `<!doctype html>
 <script src="${base}app.js" defer></script>
 </head>
 <body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
 ${body}
 <footer class="site-foot wrap">
   <p>${esc(site.person.name)}, ${esc(site.person.affiliation)}</p>
@@ -193,7 +194,7 @@ ${F.map((p, i) => `    <li><a href="work/${p.id}/" data-i="${i}">
   <div class="show-media" aria-hidden="true">${F.map((p, i) => thumb(p) ? `<img src="${esc(thumb(p))}" alt="" class="${i ? '' : 'is-on'}" data-i="${i}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>` : '').join('')}</div>
   </div>
 </header>
-<main>
+<main id="main" tabindex="-1">
   <section class="wrap" aria-labelledby="h-work">
     <h2 id="h-work" class="sec">대표 작업</h2>
     ${P.filter(p => p.featured).map(strip).join('\n')}
@@ -214,7 +215,7 @@ const casePage = p => {
     desc: p.summary,
     base,
     body: `<nav class="crumb wrap"><a href="${base}#p-${p.id}">← ${esc(site.person.name)}</a></nav>
-<main class="case wrap">
+<main class="case wrap" id="main" tabindex="-1">
   <header class="case-head">
     ${logo(p)}
     <h1>${esc(p.name)}</h1>
@@ -227,7 +228,7 @@ const casePage = p => {
     <div>${media(p, base)}</div>
   </div>
 
-  <section class="case-sec"><h2>현장과 제약</h2>
+  <section class="case-sec"><h2>문제와 제약</h2>
     <div class="two"><ul class="plain">${c.context.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
     <ul class="tags">${c.constraints.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
   </section>
@@ -236,7 +237,7 @@ ${c.flow ? `
   <section class="case-sec"><h2>도입 전과 후</h2>
     <div class="ba">${['before', 'after'].map(k => `<div class="ba-${k}"><p>${k === 'before' ? '전' : '후'}</p><ol>${c.flow[k].map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}</div>
   </section>` : ''}
-  <section class="case-sec"><h2>구조 <span class="by-key">${['AI', '규칙', '사람'].map(b => `<span class="by" data-by="${b}">${b}</span>`).join('')}</span></h2>
+  <section class="case-sec"><h2>처리 구조와 내 작업 <span class="by-key">${['AI', '규칙', '사람'].map(b => `<span class="by" data-by="${b}">${b}</span>`).join('')}</span></h2>
     <ol class="flow">${c.architecture.map(n => `<li${n.mine ? ' class="is-mine"' : ''}><b>${esc(n.name)}</b><span class="by" data-by="${esc(n.by)}">${esc(n.by)}</span><span>${esc(n.detail)}</span>${n.fallback ? `<span class="fb"><em>예외</em>${esc(n.fallback)}</span>` : ''}${n.myChange ? `<span class="fb is-me"><em>내 작업</em>${esc(n.myChange)}</span>` : ''}</li>`).join('')}</ol>
   </section>
 
@@ -249,17 +250,17 @@ ${c.flow ? `
     </li>`).join('')}</ol>
   </section>
 
-  <section class="case-sec"><h2>검증</h2>
+  <section class="case-sec"><h2>평가 조건과 결과</h2>
 ${c.setup ? `    <dl class="setup"><div><dt>가설</dt><dd>${esc(c.setup.hypothesis)}</dd></div><div><dt>데이터</dt><dd>${esc(c.setup.data)}</dd></div><div><dt>정답</dt><dd>${esc(c.setup.label)}</dd></div>${c.setup.repro ? `<div><dt>재현</dt><dd>${link(c.setup.repro, '재현 방법')}</dd></div>` : ''}</dl>` : ''}
     <table class="eval"><thead><tr><th scope="col">항목</th><th scope="col">기준선</th><th scope="col">변경 후</th><th scope="col">조건</th></tr></thead>
-    <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td class="${e.baseline ? 'base' : 'none'}">${esc(e.baseline || '미측정')}</td><td>${esc(e.result || '미측정')}</td><td>${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
+    <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td data-label="기준선" class="${e.baseline ? 'base' : 'none'}">${esc(e.baseline || '미측정')}</td><td data-label="변경 후">${esc(e.result || '미측정')}</td><td data-label="조건">${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
   </section>
 ${(c.failures || []).length ? `
   <section class="case-sec"><h2>안 된 것</h2>
     <ul class="fail">${c.failures.map(x => `<li><b>${esc(x.what)}<span class="st" data-st="${esc(x.status)}">${esc(x.status)}</span></b><span><em>재현</em>${esc(x.repro)}</span><span><em>조치</em>${esc(x.fix)}</span><span><em>검증</em>${esc(x.verify || '미검증')}</span></li>`).join('')}</ul>
   </section>` : ''}
 
-  <section class="case-sec"><h2>역할</h2>
+  <section class="case-sec"><h2>내 담당과 팀 역할</h2>
     <div class="split">${c.roleSplit.map(r => `<div class="${r.who === '나' ? 'me' : ''}"><b>${esc(r.who)}</b><ul>${[].concat(r.what).map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>`).join('')}</div>
   </section>
 ${c.slides.length ? `

@@ -15,15 +15,21 @@ document.querySelectorAll('.lead a').forEach(a => {
 
 // 성과 지도: 화면에 들어올 때 한 번 그린다
 const map = document.querySelector('.map');
-if (map) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { map.classList.add('is-in'); o.disconnect(); } }, { threshold: 0.3 }).observe(map);
+if (map && !('IntersectionObserver' in window)) map.classList.add('is-in');
+else if (map) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { map.classList.add('is-in'); o.disconnect(); } }, { threshold: 0.3 }).observe(map);
 
 // 영상: 화면에 보일 때만 재생 (동작 줄이기 설정이면 자동 재생 안 함)
-const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const still = () => reduce.matches; // 실행 중 설정 변경도 반영
 const io = new IntersectionObserver(es => es.forEach(e => {
   const v = e.target;
-  if (e.isIntersecting && !still) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+  if (e.isIntersecting && !still() && !v.dataset.userPaused) { v.preload = 'auto'; v.play().catch(() => {}); } else if (!v.paused) { v.dataset.auto = '1'; v.pause(); }
 }), { threshold: 0.5 });
-document.querySelectorAll('video.media').forEach(v => { io.observe(v); if (still) v.controls = true; });
+// 사용자가 직접 멈추면 다시 보이더라도 자동 재생하지 않는다
+document.querySelectorAll('video.media').forEach(v => {
+  io.observe(v);
+  v.addEventListener('pause', () => { if (v.dataset.auto) delete v.dataset.auto; else v.dataset.userPaused = '1'; });
+});
 
 // 전체 기록 필터
 const f = document.querySelector('.filter');
@@ -45,9 +51,10 @@ if (f) {
 document.querySelectorAll('.deck').forEach(d => {
   const ctl = d.nextElementSibling, n = ctl.querySelector('.deck-n'), total = d.children.length;
   ctl.hidden = false;
-  const at = () => Math.round(d.scrollLeft / d.clientWidth);
-  const go = i => d.scrollTo({ left: Math.max(0, Math.min(total - 1, i)) * d.clientWidth, behavior: still ? 'auto' : 'smooth' });
+  const step = () => d.clientWidth + parseFloat(getComputedStyle(d).columnGap || 0); // 쪽 사이 간격 포함
+  const at = () => Math.max(0, Math.min(total - 1, Math.round(d.scrollLeft / step())));
+  const go = i => d.scrollTo({ left: Math.max(0, Math.min(total - 1, i)) * step(), behavior: still() ? 'auto' : 'smooth' });
   ctl.addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(at() + +b.dataset.d); });
-  d.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(at() + 1); if (e.key === 'ArrowLeft') go(at() - 1); });
+  d.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(at() + (e.key === 'ArrowRight' ? 1 : -1)); } });
   d.addEventListener('scroll', () => { n.textContent = `${at() + 1} / ${total}`; }, { passive: true });
 });
