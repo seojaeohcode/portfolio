@@ -6,6 +6,8 @@
   --bg: #0F1115; --card: #1A1D24; --card-2: #22262E; --line: #2C2F37;
   --text: #F2F4F6; --text-2: #B0B8C1; --text-3: #8B95A1;
   --gold: #E3B341;
+  --overlay: rgba(15, 17, 21, .78); --overlay-2: rgba(15, 17, 21, .92);
+  --paper: #FDFDFC; --ink: #191F28; --ink-2: #4E5968; --ink-3: #6B7684; --paper-2: #F2F4F6; --paper-line: #E5E8EB;
   --sans: 'Pretendard GOV Variable', 'Pretendard GOV', Pretendard, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --serif: 'MaruBuri', 'Noto Serif KR', serif;
   --t1: 32px; --t2: 24px; --t3: 19px; --body: 17px; --lbl: 15px; --num: 40px;
@@ -112,8 +114,8 @@ small { font-size: var(--lbl); font-weight: 400; color: var(--text-2); }
 .awards small { margin-left: var(--s1); }
 
 .vwrap { position: relative; }
-.vbtn { position: absolute; left: var(--s3); bottom: var(--s3); min-height: 44px; padding: 0 var(--s4); border: 0; border-radius: 999px; background: rgba(15, 17, 21, .78); color: var(--text); font: inherit; font-size: var(--lbl); cursor: pointer; }
-.vbtn:hover { background: rgba(15, 17, 21, .92); }
+.vbtn { position: absolute; left: var(--s3); bottom: var(--s3); min-height: 44px; padding: 0 var(--s4); border: 0; border-radius: 999px; background: var(--overlay); color: var(--text); font: inherit; font-size: var(--lbl); cursor: pointer; }
+.vbtn:hover { background: var(--overlay-2); }
 .p-media figcaption { margin-top: var(--s3); font-size: var(--lbl); color: var(--text-2); }
 .media { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; border-radius: var(--r2); background: var(--card-2); filter: brightness(.86); }
 
@@ -261,30 +263,30 @@ code { font: 400 var(--lbl)/1.5 ui-monospace, Consolas, monospace; color: var(--
 }
 
 /* PDF 이력서 원본 (/resume/): 밝은 A4 */
-html.paper { background: #fff; color: #191F28; }
+html.paper { background: var(--paper); color: var(--ink); }
 .paper body { font-size: 10pt; line-height: 1.5; }
 .cv { max-width: 182mm; margin: 0 auto; padding: 11mm 0 8mm; }
 .cv-head h1 { display: flex; align-items: baseline; gap: 12px; font-size: 20pt; }
 .cv-head h1 span { font-size: 12pt; }
-.cv-head p { color: #4E5968; }
+.cv-head p { color: var(--ink-2); }
 .paper .stack { margin-top: 2mm; }
-.paper .stack b { background: #F2F4F6; padding: 0 8px; }
-.paper .stack span { color: #4E5968; }
-.cv h2 { margin-top: 6mm; padding-bottom: 2mm; border-bottom: 1.5px solid #191F28; font-size: 12pt; }
+.paper .stack b { background: var(--paper-2); padding: 0 8px; }
+.paper .stack span { color: var(--ink-2); }
+.cv h2 { margin-top: 6mm; padding-bottom: 2mm; border-bottom: 1.5px solid var(--ink); font-size: 12pt; }
 .cv-p { margin-top: 3.5mm; break-inside: avoid; }
-.cv-t span { margin-left: 8px; color: #4E5968; font-size: 9.5pt; }
+.cv-t span { margin-left: 8px; color: var(--ink-2); font-size: 9.5pt; }
 .cv-h { font-weight: 700; margin-top: 1mm; }
 .cv-p ul { margin-top: 1.5mm; padding-left: 4mm; list-style: disc; }
 .cv-p li b { margin-right: 4px; }
-.cv-n { color: #6B7684; font-size: 9pt; }
+.cv-n { color: var(--ink-3); font-size: 9pt; }
 .cv-l { width: 100%; border-collapse: collapse; margin-top: 3mm; font-size: 9.5pt; }
-.cv-l td { padding: 1mm 3mm 1mm 0; border-bottom: 1px solid #E5E8EB; vertical-align: top; }
-.cv-l td:first-child { white-space: nowrap; color: #4E5968; }
+.cv-l td { padding: 1mm 3mm 1mm 0; border-bottom: 1px solid var(--paper-line); vertical-align: top; }
+.cv-l td:first-child { white-space: nowrap; color: var(--ink-2); }
 @page { size: A4; margin: 0; }
 
 @media print {
   html:not(.paper) { --bg: #fff; --card: #fff; --card-2: #f2f4f6; --line: #e5e8eb; --text: #191f28; --text-2: #4e5968; --text-3: #6b7684; --gold: #8a5f00; }
   .p-media, .case-media, .deck, .deck-ctl, .filter, .crumb, .skip, .bar .links, .toc { display: none !important; }
-  .proj { grid-template-columns: 1fr; grid-template-areas: "text" "impact" "links"; padding: 0; break-inside: avoid; }
+  .proj { grid-template-columns: minmax(0, 1fr); grid-template-areas: "text" "impact" "links"; padding: 0; break-inside: avoid; }
   * { animation: none !important; }
 }
