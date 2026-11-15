@@ -1,7 +1,7 @@
 # Graph Report - 포폴  (2026-11-15)
 
 ## Corpus Check
-- 32 files · ~48,644 words
+- 32 files · ~48,670 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 8, .css 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `52e24dd2`
+- Built from commit: `af364c7a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

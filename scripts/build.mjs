@@ -78,8 +78,7 @@ const metric = m => {
       <p class="m-name">${esc(m.label)}<span>${m.better === 'lower' ? '적을수록 좋음' : '높을수록 좋음'}</span></p>
       <p class="m-val"><span class="m-before">${m.before}${esc(m.unit)}</span><span class="m-arrow" aria-hidden="true">→</span><b>${m.after}<small>${esc(m.unit)}</small></b></p>
       <div class="m-bars" aria-hidden="true"><i style="--w:${(m.before / max * 100).toFixed(1)}%"></i><i class="is-after" style="--w:${(m.after / max * 100).toFixed(1)}%"></i></div>
-      <p class="m-set">${esc(m.set || '')}</p>
-      <p class="m-basis">${esc(m.def || `${m.beforeLabel} 대비 ${m.afterLabel}`)}</p>
+      <p class="m-set">${esc(m.beforeLabel)} → ${esc(m.afterLabel)}. ${esc(m.set || '')}</p>
     </div>`;
 };
 
@@ -103,9 +102,9 @@ const card = (p, i) => `
     <p class="p-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b><span>${esc(p.kname)}</span></p>
     <p class="p-sub">${range(p)}<span>${esc(p.team)} 팀</span><span>${esc(p.status)}</span></p>
     <h2 class="p-title" id="t-${p.id}">${esc(p.headline)}</h2>
+    ${roleBlock(p)}
     <p class="scene">${esc(p.scene)}</p>
     ${metric(p.metric)}
-    ${roleBlock(p)}
     ${awards(p)}
   </div>
   <figure class="p-media"><div class="vwrap">${media(p)}</div>${p.media && p.media.caption ? `<figcaption>${esc(p.media.caption)}</figcaption>` : ''}</figure>
@@ -220,9 +219,10 @@ ${c.flow ? `
   </section>
 
   <section class="cs"><h2>${esc(p.metric.label)} ${p.metric.after}${esc(p.metric.unit)}는 이렇게 쟀습니다</h2>
+    <p class="m-def">${esc(p.metric.def || '')}</p>
 ${c.setup ? `    <dl class="setup"><div><dt>가설</dt><dd>${esc(c.setup.hypothesis)}</dd></div><div><dt>데이터</dt><dd>${esc(c.setup.data)}</dd></div>${c.setup.split ? `<div><dt>분리</dt><dd>${esc(c.setup.split)}</dd></div>` : ''}${c.setup.unit ? `<div><dt>평가 단위</dt><dd>${esc(c.setup.unit)}</dd></div>` : ''}<div><dt>정답</dt><dd>${esc(c.setup.label)}</dd></div>${c.setup.repro ? `<div><dt>재현</dt><dd>${link(c.setup.repro, '재현 방법')}</dd></div>` : ''}</dl>` : ''}
-${c.ablation ? `    <h3 class="ab-h">무엇이 얼마나 기여했나 <small>같은 평가셋에서 하나씩 더함</small></h3>
-    <ol class="ab">${c.ablation.map((a, i) => `<li><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b></li>`).join('')}</ol>` : ''}
+${c.ablation ? `    <h3 class="ab-h">무엇이 얼마나 기여했나 <small>같은 평가셋에서 하나씩 더함, 오른쪽은 하루 평균 오탐</small></h3>
+    <ol class="ab">${c.ablation.map((a, i) => `<li><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${esc(a.fp || '')}</em></li>`).join('')}</ol>` : ''}
     <table class="eval"><thead><tr><th scope="col">항목</th><th scope="col">이전</th><th scope="col">이후</th><th scope="col">조건</th></tr></thead>
     <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td data-label="이전" class="${e.baseline ? 'base' : 'none'}">${esc(e.baseline || '미측정')}</td><td data-label="이후" class="res">${esc(e.result || '미측정')}</td><td data-label="조건" class="cond">${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
   </section>
@@ -260,7 +260,7 @@ const resume = page({
   <section><h2>대표 프로젝트</h2>
   ${F.map(p => `<article class="cv-p"><p class="cv-t"><b>${esc(p.name)}</b> ${esc(p.kname)}<span>${range(p)}, ${esc(p.team)} 팀</span></p>
     <p class="cv-h">${esc(p.headline)}</p>
-    <ul><li><b>역할</b> ${esc([].concat(((p.case && p.case.roleSplit) || []).find(r => r.who === '나')?.what || p.role).join(', '))}</li><li><b>결과</b> ${esc(p.metric.label)} ${p.metric.before}${esc(p.metric.unit)} → ${p.metric.after}${esc(p.metric.unit)} <span class="cv-n">${esc(p.metric.set || '')}</span></li><li><b>결정</b> ${p.decisions.map(d => `${esc(d.title)} (${esc(d.effectLabel)} ${esc(d.effect)})`).join(', ')}</li>${(p.outcomes || []).length ? `<li><b>수상</b> ${p.outcomes.map(o => `${fmt(o.date)} ${esc(o.title)} ${esc(o.prize)}${o.rank ? ` (${esc(o.rank)})` : ''}`).join(', ')}</li>` : ''}</ul></article>`).join('')}
+    <ul><li><b>역할</b> ${esc([].concat(((p.case && p.case.roleSplit) || []).find(r => r.who === '나')?.what || p.role).join(', '))}</li><li><b>결과</b> ${esc(p.metric.label)} ${p.metric.before}${esc(p.metric.unit)} → ${p.metric.after}${esc(p.metric.unit)} <span class="cv-n">${esc(p.metric.set || '')}</span></li><li><b>결정</b> ${p.decisions.map(d => `${esc(d.title)} (${esc(d.effectLabel)} ${esc(d.effect)})`).join(', ')}</li><li><b>상세</b> ${esc(site.person.site || '')}work/${p.id}/</li>${(p.outcomes || []).length ? `<li><b>수상</b> ${p.outcomes.map(o => `${fmt(o.date)} ${esc(o.title)} ${esc(o.prize)}${o.rank ? ` (${esc(o.rank)})` : ''}`).join(', ')}</li>` : ''}</ul></article>`).join('')}
   </section>
   <section><h2>전체 기록</h2><table class="cv-l">${[...P].sort((a, b) => ym(b.start) - ym(a.start)).map(p => `<tr><td>${range(p)}</td><td><b>${esc(p.name)}</b> ${esc(p.kname || p.summary)}</td><td>${(p.outcomes || []).map(o => esc(o.prize)).join(', ')}</td></tr>`).join('')}</table></section>
 </main>`,
