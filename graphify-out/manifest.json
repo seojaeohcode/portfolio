@@ -18,15 +18,15 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794755064.4295475,
-    "seen": 1794755176.2527373,
-    "ast_hash": "e0fb1959ef94c55cd69cc1495b4bd457",
+    "mtime": 1794755993.149494,
+    "seen": 1794756290.7186885,
+    "ast_hash": "af8144330182e2267f9a3181c19c4e62",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794755064.4295475,
-    "seen": 1794755176.2527392,
-    "ast_hash": "7838ed33977bc5529796570fbfdc348d",
+    "mtime": 1794756181.0280607,
+    "seen": 1794756290.7186904,
+    "ast_hash": "f286b33e70273dd4e6fa5fd240ecfdaf",
     "semantic_hash": ""
   },
   "src/app.js": {
@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "docs/research/SYNTHESIS.md": {
-    "mtime": 1794755172.115394,
-    "seen": 1794755176.2527757,
-    "ast_hash": "2a9f2ed589498b46d6eb2c167686e56d",
+    "mtime": 1794756287.4137447,
+    "seen": 1794756290.7187278,
+    "ast_hash": "551c1a590eed5ea2e4d53614d88097d3",
     "semantic_hash": ""
   }
 }

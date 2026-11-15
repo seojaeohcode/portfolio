@@ -1,17 +1,17 @@
 # Graph Report - 포폴  (2026-11-16)
 
 ## Corpus Check
-- 32 files · ~48,754 words
+- 32 files · ~48,989 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 8, .css 1)
 
 ## Summary
-- 364 nodes · 389 edges · 28 communities (24 shown, 4 thin omitted)
+- 365 nodes · 390 edges · 28 communities (24 shown, 4 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 10 edges (avg confidence: 0.91)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b858e331`
+- Built from commit: `c4fa67c1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -48,9 +48,9 @@
 1. `Humanize Korean — AI 한글 티 제거 오케스트레이터 (v2.4)` - 18 edges
 2. `대상별 분석` - 15 edges
 3. `esc()` - 14 edges
-4. `설계서 — 포트폴리오 양식 (현재 v3)` - 13 edges
-5. `공개 원문 12개` - 13 edges
-6. `Quick Rules — Monolith Fast Path 전용 (v2.0)` - 13 edges
+4. `공개 원문 12개` - 13 edges
+5. `Quick Rules — Monolith Fast Path 전용 (v2.0)` - 13 edges
+6. `설계서 — 포트폴리오 양식 (현재 v3)` - 13 edges
 7. `Humanizer: remove AI writing patterns` - 11 edges
 8. `포트폴리오 웹사이트의 전달력: 이론·근거·검증 규칙` - 10 edges
 9. `casePage()` - 9 edges
@@ -102,8 +102,8 @@ Cohesion: 0.20
 Nodes (9): 1. The kind of business decides everything, 2. The page plan by kind, 3. What serves which page, 4. The run, 5. Checklist, 6. Never, House rules, References (+1 more)
 
 ### Community 7 - "설계서 — 포트폴리오 양식 v1"
-Cohesion: 0.10
-Nodes (19): 0. 한 문장, 1. 읽는 시간별 설계 (정보 위계), 2. 시그니처 시각화: 성과 지도, 3. 대표 작업 스트립 (카드 반복 금지), 4. 시각 언어, 5. 감성 설계 (심장을 울리는 부분), 6. 공학적 장치, 7. 금지 목록 (+11 more)
+Cohesion: 0.09
+Nodes (20): 0. 한 문장, 1. 읽는 시간별 설계 (정보 위계), 2. 시그니처 시각화: 성과 지도, 3. 대표 작업 스트립 (카드 반복 금지), 4. 시각 언어, 5. 감성 설계 (심장을 울리는 부분), 6. 공학적 장치, 7. 금지 목록 (+12 more)
 
 ### Community 8 - "신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나"
 Cohesion: 0.22
@@ -171,7 +171,7 @@ Nodes (7): 1. 출처별 핵심 발언 요약, 2. 국내 서류 검토 시간: �
 
 ## Knowledge Gaps
 - **1 isolated node(s):** `PATH`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 266 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 267 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions

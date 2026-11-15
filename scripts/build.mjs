@@ -85,19 +85,20 @@ const card = (p, i) => {
   return `
 <article class="proj" id="p-${p.id}" aria-labelledby="t-${p.id}">
   <div class="p-text">
-    <p class="p-meta"><b>${no(i)} ${esc(p.name)}</b>${esc(p.kname)}, ${range(p)}, ${esc(p.team)} 팀</p>
+    <p class="p-meta"><b>${no(i)} ${esc(p.name)}</b>${esc(p.kname)}, ${range(p)}${p.origin ? `, ${esc(p.origin)}` : ''}</p>
+    <p class="p-mine"><span>${esc(p.team)} 팀에서 내 담당</span>${esc([].concat(me ? me.what : p.role).join(', '))}</p>
     <h2 class="p-title" id="t-${p.id}">${esc(p.headline)}</h2>
+    <p class="p-check"><a href="#v-${p.id}">${p.media && p.media.type === 'video' ? '시연 영상' : '실제 화면'}</a><a href="work/${p.id}/#eval">평가 방법</a><a href="work/${p.id}/">설계 과정</a>${(p.links || []).filter(l => l.href && l.href !== '#').map(l => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</p>
     <p class="scene">${esc(p.scene)}</p>
-    <p class="p-num"><span class="was">${m.before}${esc(m.unit)}</span><span class="arr" aria-hidden="true">→</span><b>${m.after}<small>${esc(m.unit)}</small></b><span class="what"><b>${esc(m.label)}</b>${m.set ? ` (${esc(m.set)})` : ''}${m.better === 'lower' ? ', 적을수록 좋음' : ''}</span></p>
-    ${m.second ? `<p class="p-second">${esc(m.second)}</p>` : ''}
+    <p class="p-num"><span class="was">${m.before}${esc(m.unit)}</span><span class="arr" aria-hidden="true">→</span><b>${m.after}<small>${esc(m.unit)}</small></b><span class="what"><b>${esc(m.label)}</b>${m.better === 'lower' ? ' (적을수록 좋음)' : ''}<br>${esc(m.beforeLabel)} ${m.before}${esc(m.unit)} → ${esc(m.afterLabel)} ${m.after}${esc(m.unit)}, ${esc(m.set || '')}</span></p>
     <dl class="facts">
-      <div><dt>직접 만든 것</dt><dd>${esc([].concat(me ? me.what : p.role).join(', '))}</dd></div>
+      ${m.second ? `<div><dt>현장 효과</dt><dd>${esc(m.second)}</dd></div>` : ''}
       <div><dt>핵심 판단</dt><dd>${esc(key.title)} → <b>${esc(key.effectLabel)} ${esc(key.effect)}</b></dd></div>
       ${(p.outcomes || []).length ? `<div><dt>${won ? '수상' : '공개'}</dt><dd>${p.outcomes.map(o => `<span class="aw">${mk(o)}${esc(o.title)} ${esc(o.prize)}${o.rank ? `(${esc(o.rank)})` : ''}</span>`).join('')}</dd></div>` : ''}
     </dl>
     <p class="p-links"><a class="go" href="work/${p.id}/">설계와 평가 과정 보기</a>${p.case && p.case.slides.length ? `<a href="work/${p.id}/#slides">발표자료 ${p.case.slides.length}쪽</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
   </div>
-  <figure class="p-media"><div class="vwrap">${media(p)}</div>${p.media && p.media.caption ? `<figcaption>${esc(p.media.caption)}</figcaption>` : ''}</figure>
+  <figure class="p-media" id="v-${p.id}"><div class="vwrap">${media(p)}</div>${p.media && p.media.caption ? `<figcaption>${esc(p.media.caption)}</figcaption>` : ''}</figure>
 </article>`;
 };
 
@@ -154,8 +155,9 @@ const home = page({
     <p class="to" hidden></p>
     <h1>${esc(site.person.name)}<span>${esc(site.person.field)}</span></h1>
     <p class="who"><span>${esc(site.person.affiliation)}</span><span>${esc(site.person.grad)}</span></p>
-    <p class="stack"><span>주력</span>${(site.person.stack || []).map(x => `<b>${esc(x)}</b>`).join('')}</p>
-    <nav class="toc" aria-label="대표 작업 목차"><span>대표 작업 ${F.length}</span>${F.map((p, i) => `<a href="#p-${p.id}"><b>${no(i)}</b>${esc(p.name)}<small>${esc(p.metric.short || p.metric.label)} ${p.metric.after}${esc(p.metric.unit)}</small></a>`).join('')}</nav>
+    ${site.person.pitch ? `<p class="pitch">${esc(site.person.pitch)}</p>` : ''}
+    <p class="stack-line">주력 ${(site.person.stack || []).map(esc).join(', ')}</p>
+    <nav class="toc" aria-label="대표 작업 목차"><span>대표 작업 ${F.length}</span>${F.map((p, i) => `<a href="#p-${p.id}"><b>${no(i)}</b>${esc(p.name)}<small>${esc(p.kname)}</small></a>`).join('')}</nav>
   </section>
   <div class="work wrap">
     ${F.map(card).join('\n')}
@@ -207,7 +209,8 @@ ${c.flow ? `
     </li>`).join('')}</ol>
   </section>
 
-  <section class="cs"><h2>${esc(p.metric.label)} ${p.metric.after}${esc(p.metric.unit)}는 이렇게 쟀습니다</h2>
+  <section class="cs" id="eval"><h2>${esc(p.metric.label)} ${p.metric.after}${esc(p.metric.unit)}, 이렇게 쟀습니다</h2>
+    ${p.metric.second ? `<p class="m-def"><b>함께 잰 업무 효과</b> ${esc(p.metric.second)}</p>` : ''}
     <p class="m-def">${esc(p.metric.def || '')}</p>
 ${c.setup ? `    <dl class="setup"><div><dt>가설</dt><dd>${esc(c.setup.hypothesis)}</dd></div><div><dt>데이터</dt><dd>${esc(c.setup.data)}</dd></div>${c.setup.split ? `<div><dt>분리</dt><dd>${esc(c.setup.split)}</dd></div>` : ''}${c.setup.unit ? `<div><dt>평가 단위</dt><dd>${esc(c.setup.unit)}</dd></div>` : ''}<div><dt>정답</dt><dd>${esc(c.setup.label)}</dd></div>${c.setup.repro ? `<div><dt>재현</dt><dd>${link(c.setup.repro, '재현 방법')}</dd></div>` : ''}</dl>` : ''}
 ${c.ablation ? `    <h3 class="ab-h">무엇이 얼마나 기여했나 <small>같은 평가셋에서 하나씩 더함, 오른쪽은 하루 평균 오탐</small></h3>
