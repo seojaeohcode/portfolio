@@ -104,14 +104,14 @@ const chapter = (p, i) => {
     <div><h2 id="h-${p.id}">${esc(p.headline)}</h2>
     <p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
     <p class="mine"><span>내 담당</span>${esc(role(p))}</p></div>
-    <figure class="frame is-sm"><div class="vwrap">${media(p)}${p.media && p.media.short ? `<figcaption class="cap">${esc(p.media.short)}</figcaption>` : ''}</div></figure>
+    <figure class="frame is-sm"><div class="vwrap">${media(p)}</div></figure>
   </div>`}
 ${arch.length ? `  <h3 class="ch-h">처리 흐름과 내 구현</h3>
-  <ol class="pipe" style="--k:${arch.length}">${arch.map(n => `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine ? '<span>내 담당</span>' : ''}</p><p>${esc(n.detail)}</p>${n.effect ? `<p class="fx">${esc(n.effect)}</p>` : ''}</li>`).join('')}</ol>` : ''}
+  <ol class="pipe" style="--k:${arch.length}">${arch.map(n => `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine && !arch.every(x => x.mine) ? '<span>내 담당</span>' : ''}</p><p>${esc(n.detail)}</p>${n.effect ? `<p class="fx">${esc(n.effect)}</p>` : ''}</li>`).join('')}</ol>` : ''}
   <div class="ch-ev">
-    <div>${c.ablation ? `<h3 class="ch-h">${esc(p.metric.label)}<small>같은 평가셋에서 하나씩 더함</small></h3>
-      <ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : `<h3 class="ch-h">${esc(p.metric.label)}</h3>${bars(p.metric)}`}
-      <p class="cond">${esc(p.metric.def || p.metric.set || '')}</p></div>
+    <div>${c.ablation ? `<h3 class="ch-h">${esc(p.metric.label)}<small>같은 평가셋, 기능을 하나씩 추가</small></h3>
+      <p class="cond">${esc(p.metric.def || p.metric.set || '')}</p>
+      <ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : `<h3 class="ch-h">${esc(p.metric.label)}</h3><p class="cond">${esc(p.metric.def || p.metric.set || '')}</p>${bars(p.metric)}`}</div>
     <div><h3 class="ch-h">설계 판단과 효과</h3><ol class="dec">${p.decisions.map(d => `<li><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span><p>${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`).join('')}</ol></div>
   </div>
   <div class="ch-foot">${awards(p, true)}<p class="go">${(c.slides || []).length ? `<a href="work/${p.id}/#slides">발표자료 ${c.slides.length}쪽 웹으로 보기</a>` : ''}${(c.failures || []).length ? `<a href="work/${p.id}/#fail">실패 사례 ${c.failures.length}건과 수정 내용</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p></div>
@@ -180,7 +180,7 @@ const home = page({
   <section class="record wrap" id="record" aria-labelledby="h-all">
     <h2 id="h-all" class="sec">전체 기록<small>${Math.min(...P.map(p => +p.start.slice(0, 4)))}–${today.getFullYear()} · 프로젝트 ${stats.projects}개 · 수상 ${stats.awards}회</small></h2>
     ${grid()}
-    <details class="list"><summary>연도별 목록과 활동 ${(site.activities || []).length}건 보기</summary>${ledger()}</details>
+    <details class="list"><summary>연도별 상세 기록 보기</summary>${ledger()}</details>
   </section>
 </main>
 ${foot()}`,
@@ -228,7 +228,7 @@ ${c.flow ? `
     ${p.metric.second ? `<p class="m-def"><b>함께 잰 업무 효과</b> ${esc(p.metric.second)}</p>` : ''}
     <p class="m-def">${esc(p.metric.def || '')}</p>
 ${c.setup ? `    <dl class="setup"><div><dt>가설</dt><dd>${esc(c.setup.hypothesis)}</dd></div><div><dt>데이터</dt><dd>${esc(c.setup.data)}</dd></div>${c.setup.split ? `<div><dt>분리</dt><dd>${esc(c.setup.split)}</dd></div>` : ''}${c.setup.unit ? `<div><dt>평가 단위</dt><dd>${esc(c.setup.unit)}</dd></div>` : ''}<div><dt>정답</dt><dd>${esc(c.setup.label)}</dd></div>${c.setup.repro ? `<div><dt>재현</dt><dd>${link(c.setup.repro, '재현 방법')}</dd></div>` : ''}</dl>` : ''}
-${c.ablation ? `    <h3 class="ab-h">무엇이 얼마나 기여했나 <small>같은 평가셋에서 하나씩 더함, 오른쪽은 하루 평균 오탐</small></h3>
+${c.ablation ? `    <h3 class="ab-h">무엇이 얼마나 기여했나 <small>같은 평가셋, 기능을 하나씩 추가, 오른쪽은 하루 평균 오탐</small></h3>
     <ol class="ab">${c.ablation.map((a, i) => `<li><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${esc(a.fp || '')}</em></li>`).join('')}</ol>` : ''}
     <table class="eval"><thead><tr><th scope="col">항목</th><th scope="col">이전</th><th scope="col">이후</th><th scope="col">조건</th></tr></thead>
     <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td data-label="이전" class="${e.baseline ? 'base' : 'none'}">${esc(e.baseline || '미측정')}</td><td data-label="이후" class="res">${esc(e.result || '미측정')}</td><td data-label="조건" class="cond">${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
