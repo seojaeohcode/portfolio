@@ -33,13 +33,13 @@ function grid() {
   const y1 = Math.max(today.getFullYear(), ...P.map(p => +(p.end || nowYM).slice(0, 4)));
   const a = y0 * 12, n = (y1 - y0 + 1) * 12, x = s => ((ym(s) - a + 0.5) / n * 100).toFixed(2);
   const rows = [...P].sort((p, q) => ym(q.start) - ym(p.start));
-  const res = p => { const w = (p.outcomes || []).filter(isAward); return w.length ? w.map(o => o.prize).join(' · ') : (p.outcomes || []).map(o => o.prize).join(' · ') || p.summary; };
+  const res = p => { const w = (p.outcomes || []).filter(isAward); return w.length ? w.map(o => pz(o)).join(' · ') : esc((p.outcomes || []).map(o => o.prize).join(' · ') || p.summary); };
   return `<figure class="grid" style="--yrs:${y1 - y0 + 1}" aria-labelledby="g-cap">
   <div class="g-years" aria-hidden="true">${Array.from({ length: y1 - y0 + 1 }, (_, i) => `<span>${y0 + i}</span>`).join('')}</div>
   <ol>
 ${rows.map(p => {
     const name = p.featured ? `<a href="#p-${p.id}">${esc(p.name)}</a>` : esc(p.name);
-    return `    <li class="${p.featured ? 'is-f' : ''}"${p.color ? ` style="--c:${esc(p.color)}"` : ''}><span class="g-name">${name}<small>${esc(p.kind)}</small></span><span class="g-track" aria-hidden="true"><i class="g-bar" style="--s:${x(p.start)}%;--e:${x(p.end || nowYM)}%"></i>${(p.outcomes || []).map(o => `<span class="g-mk" style="--x:${x(o.date)}%">${mk(o)}</span>`).join('')}</span><span class="g-out">${esc(res(p))}</span><span class="sr">${range(p)}${(p.outcomes || []).map(o => `, ${fmt(o.date)} ${o.title} ${o.prize}`).join('')}</span></li>`;
+    return `    <li class="${p.featured ? 'is-f' : ''}"${p.color ? ` style="--c:${esc(p.color)}"` : ''}><span class="g-name">${name}<small>${esc(p.kind)}</small></span><span class="g-track" aria-hidden="true"><i class="g-bar" style="--s:${x(p.start)}%;--e:${x(p.end || nowYM)}%"></i>${(p.outcomes || []).map(o => `<span class="g-mk" style="--x:${x(o.date)}%">${mk(o)}</span>`).join('')}</span><span class="g-out">${res(p)}</span><span class="sr">${range(p)}${(p.outcomes || []).map(o => `, ${fmt(o.date)} ${o.title} ${o.prize}`).join('')}</span></li>`;
   }).join('\n')}
   </ol>
   <figcaption id="g-cap" class="legend">${[1, 2, 3, 'x'].map(t => `<span>${mark(t)}${TIER[t]}</span>`).join('')}<span><i class="sw" aria-hidden="true"></i>진행 기간</span></figcaption>
@@ -68,13 +68,21 @@ const bars = m => {
   const row = (l, v, c) => `<li class="${c}"><span>${esc(l)}</span><i style="--w:${(v / max * 100).toFixed(1)}%"></i><b>${v}${esc(m.unit)}</b></li>`;
   return `<ol class="bars">${row(m.beforeLabel, m.before, 'was')}${row(m.afterLabel, m.after, 'now')}</ol>`;
 };
-const awards = (p, full) => (p.outcomes || []).length ? `<ul class="aw${full ? ' is-full' : ''}">${p.outcomes.map(o => `<li>${mk(o)}<b>${esc(o.prize)}</b>${esc(o.title)}${full ? `<small>${[fmt(o.date), o.rank, o.host].filter(Boolean).map(esc).join(' · ')}</small>` : o.rank ? ` · ${esc(o.rank)}` : ''}</li>`).join('')}</ul>` : '';
 
+// 성과 글자: 상위 수상만 금색, 나머지는 흰 글자
+const pz = (o, c = '') => `<b class="${c}pz${o.kind === 'award' && o.tier === 1 ? ' is-top' : ''}">${esc(o.prize)}</b>`;
+const num = m => `<b class="n"><span class="t-was">${m.before}<span class="sr">${esc(m.unit)}에서</span><span aria-hidden="true"> →</span></span> ${m.after}<small>${esc(m.unit)}</small></b>`;
+// 성과 한 줄: 핵심 수치 · 보조 수치 · 수상 (장 맨 위와 케이스 페이지 맨 위)
+const kpi = p => `<ul class="kpi">
+    <li>${num(p.metric)}<span>${esc(p.metric.short || p.metric.label)}</span></li>
+    ${p.metric.alt ? `<li><b class="n">${esc(p.metric.alt.value)}</b><span>${esc(p.metric.alt.label)}</span></li>` : ''}
+    ${(p.outcomes || []).map(o => `<li>${pz(o, 'n ')}<span>${[o.title, o.rank].filter(Boolean).map(esc).join(' · ')}</span></li>`).join('')}
+  </ul>`;
+// 첫 화면 카드 3장: 이름 · 핵심 수치 · 수상 (같은 줄끼리 높이가 맞게 subgrid)
 const tab = (p, i) => `<li><button type="button" role="tab" id="tab-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''} aria-controls="s-${p.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>
-  ${logo(p)}<span class="t-name"><b>${esc(p.name)}</b><small>${fmt(p.start)}</small></span>
-  <span class="t-head">${esc(p.headline)}</span>
-  <span class="t-aw">${(p.outcomes || []).length ? `${mk(p.outcomes[0])}${(p.outcomes || []).map((o, j) => j ? esc(o.prize) : `${esc(o.prize)} ${esc(o.title)}`).join(' · ')}` : ''}</span>
-  <span class="t-num"><b><span class="t-was">${p.metric.before}<span class="sr">${esc(p.metric.unit)}에서</span><span aria-hidden="true"> →</span></span> ${p.metric.after}<small>${esc(p.metric.unit)}</small></b>${esc(p.metric.short || p.metric.label)}</span>
+  <span class="t-name">${logo(p)}<b>${esc(p.name)}</b><small>${esc(p.kname)}</small></span>
+  <span class="t-num">${num(p.metric)}<span class="t-lbl">${esc(p.metric.short || p.metric.label)}</span></span>
+  <span class="t-aw">${(p.outcomes || []).map(o => `<span>${pz(o)}${esc(o.title)}</span>`).join('')}</span>
 </button></li>`;
 
 const stage = (p, i) => {
@@ -88,7 +96,6 @@ const stage = (p, i) => {
   <div class="ev-m"><p class="ev-h"><b>${esc(m.short || m.label)}</b>${esc(m.set || '')}</p>${bars(m)}${p.decisions[0] ? `<p class="key">${esc(p.decisions[0].title)} → <b>${esc(p.decisions[0].effectLabel)} ${esc(p.decisions[0].effect)}</b></p>` : ''}</div>
   <div class="ev-s">${m.alt ? `<p class="alt"><b>${esc(m.alt.value)}</b>${esc(m.alt.label)}</p><p class="alt-c">${esc(m.alt.cond || '')}</p>` : ''}</div>
   </div>
-  <div class="aw-m">${awards(p)}</div>
   <p class="go"><a href="work/${p.id}/#eval">${esc(p.more)}</a><a href="work/${p.id}/">설계 결정 ${p.decisions.length}개와 이유</a>${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
 </article>`;
 };
@@ -106,10 +113,11 @@ const chapter = (p, i) => {
   return `
 <section class="ch wrap" id="p-${p.id}" aria-labelledby="h-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''}>
   <p class="ch-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b>${esc(p.kname)} · ${range(p)} · ${esc(p.team)} 팀${p.status ? ` · ${esc(p.status)}` : ''}</p>
+  <h2 id="h-${p.id}">${i === 0 ? `${esc(p.name)} 설계와 평가` : esc(p.headline)}</h2>
+  ${kpi(p)}
   <div class="ch-top${i === 0 ? ' is-first' : ''}">
-    <div class="ch-a">${i === 0 ? `<h2 id="h-${p.id}" class="ch-again">${esc(p.name)} 설계와 평가</h2>` : `<h2 id="h-${p.id}">${esc(p.headline)}</h2>
-    <p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
-    <p class="mine"><span>내 담당</span>${esc(role(p))}</p>`}</div>
+    ${i === 0 ? '' : `<div class="ch-a"><p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
+    <p class="mine"><span>내 담당</span>${esc(role(p))}</p></div>`}
     <div class="ch-b">
       <div><h3 class="ch-h">${esc(p.metric.label)}</h3><p class="cond">${c.ablation ? '같은 평가셋에서 기능을 하나씩 추가. ' : ''}${esc(p.metric.def || p.metric.set || '')}</p></div>
       <div>${c.ablation ? `<ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : bars(p.metric)}</div>
@@ -123,7 +131,7 @@ ${arch.length ? `  <h3 class="ch-h">구현과 선택 이유</h3>
     return `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine && !allMine ? '<span>내 담당</span>' : ''}</p><div class="pp-d"><p>${esc(n.detail)}</p>${fx}</div><div class="pp-x">${ds.map(dec).join('')}</div></li>`;
   }).join('')}</ol>` : ''}
 ${loose.length ? `  <ol class="dec">${loose.map(d => `<li><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span><p>${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`).join('')}</ol>` : ''}
-  <div class="ch-foot">${awards(p, true)}<p class="go">${(c.slides || []).length ? `<a href="work/${p.id}/#slides">발표자료 ${c.slides.length}쪽 웹으로 보기</a>` : ''}${(c.failures || []).length ? `<a href="work/${p.id}/#fail">실패 사례 ${c.failures.length}건과 수정 내용</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p></div>
+  <div class="ch-foot"><p class="go">${(c.slides || []).length ? `<a href="work/${p.id}/#slides">발표자료 ${c.slides.length}쪽 웹으로 보기</a>` : ''}${(c.failures || []).length ? `<a href="work/${p.id}/#fail">실패 사례 ${c.failures.length}건과 수정 내용</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p></div>
 </section>`;
 };
 
@@ -181,10 +189,8 @@ const home = page({
       <p class="who">${[site.person.field, site.person.affiliation, site.person.grad].map(esc).join(' · ')}</p>
       <h1><span class="sr">${esc(site.person.name)}, </span>${esc(site.person.headline || site.person.pitch).replace(/\n/g, '<br>')}</h1>
     </div>
-    <div class="lead-l">
-      <ol class="idx" role="tablist" aria-label="대표 작업 ${F.length}개">${F.map(tab).join('')}</ol>
-      <a class="all" href="#record">프로젝트 ${stats.projects}개 · 수상 ${stats.awards}회 전체 기록</a>
-    </div>
+    <a class="all" href="#record">프로젝트 ${stats.projects}개 · 수상 ${stats.awards}회 전체 기록</a>
+    <ol class="idx" role="tablist" aria-label="대표 작업 ${F.length}개">${F.map(tab).join('')}</ol>
     <div class="stage">${F.map(stage).join('\n')}</div>
   </section>
   ${F.map(chapter).join('\n')}
@@ -213,6 +219,7 @@ const casePage = p => {
     <h1>${esc(p.headline)}</h1>
     ${roleBlock(p)}
   </header>
+  ${kpi(p)}
   <figure class="case-media"><div class="vwrap">${media(p, base)}</div>${p.media && p.media.caption ? `<figcaption>${esc(p.media.caption)}</figcaption>` : ''}</figure>
 
   <section class="cs"><h2>무엇이 문제였나</h2>
