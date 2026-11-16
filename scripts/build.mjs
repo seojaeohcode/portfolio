@@ -1,5 +1,5 @@
 // content/site.json -> dist/ (static HTML). Node stdlib only.
-// v3: 프로젝트 하나를 끝까지 이해시키는 카드를 같은 틀로 반복한다. 근거는 docs/research/SYNTHESIS.md
+// v6: 첫 화면 = 목록 + 시연 무대, 아래 = 프로젝트 장(설계 -> 기능), 전체 기록 격자. 근거는 docs/research/SYNTHESIS.md
 import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, copyFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,39 +27,22 @@ const isAward = o => o.kind === 'award' && o.tier <= 2;
 const stats = { projects: P.length, awards: outcomes.filter(isAward).length, top: outcomes.filter(o => o.tier === 1).length };
 const no = i => String(i + 1).padStart(2, '0');
 
-// ---------- 성과 지도 ----------
-function outcomeMap() {
+// ---------- 전체 기록: 프로젝트 × 월 격자 (잔디처럼 한눈에, 메달은 수상한 달) ----------
+function grid() {
   const y0 = Math.min(...P.map(p => +p.start.slice(0, 4)));
-  const y1 = today.getFullYear() + 1;
-  const a = y0 * 12, span = y1 * 12 - a;
-  const pct = s => (((ym(s) - a) + 0.5) / span * 100).toFixed(2);
+  const y1 = Math.max(today.getFullYear(), ...P.map(p => +(p.end || nowYM).slice(0, 4)));
+  const a = y0 * 12, n = (y1 - y0 + 1) * 12, x = s => ((ym(s) - a + 0.5) / n * 100).toFixed(2);
   const rows = [...P].sort((p, q) => ym(q.start) - ym(p.start));
-  const years = Array.from({ length: y1 - y0 }, (_, i) => y0 + i);
-  return `
-<figure class="map" aria-labelledby="map-cap">
-  <figcaption id="map-cap" class="legend">${[1, 2, 3, 'x'].map(t => `<span>${mark(t)}${TIER[t]}</span>`).join('')}</figcaption>
-  <div class="map-body">
-  <div class="map-grid" aria-hidden="true">${years.map(y => `<span style="--x:${((y * 12 - a) / span * 100).toFixed(2)}%">${y}</span>`).join('')}</div>
-  <ol class="map-rows">
-${rows.map((p, i) => {
-    const end = p.end || nowYM;
-    const tops = (p.outcomes || []).filter(o => o.kind === 'award' && o.tier === 1);
-    const last = Math.max(+pct(end), ...(p.outcomes || []).map(o => +pct(o.date)));
-    const label = tops.length ? `<span class="row-top${last > 55 ? ' is-left' : ''}" style="--x:${last > 55 ? pct(p.start) : last}%">${tops.map(o => `${esc(o.title)} ${esc(o.prize)}`).join(', ')}</span>` : '';
-    return `    <li class="row${p.featured ? ' is-featured' : ''}${p.end ? '' : ' is-open'}" style="--i:${rows.length - i}">
-      <a href="${p.featured ? `#p-${p.id}` : `#r-${p.id}`}">
-        <span class="row-name">${esc(p.name)}</span>
-        <span class="row-track" style="--s:${pct(p.start)}%;--e:${pct(end)}%">
-          <span class="row-bar"></span>
-${(p.outcomes || []).map(o => `          <span class="row-mk" style="--x:${pct(o.date)}%">${mk(o)}</span>`).join('\n')}
-          ${label}
-        </span>
-        <span class="sr">${esc(p.name)}, ${range(p)}${(p.outcomes || []).map(o => `, ${o.title} ${o.prize}`).join('')}</span>
-      </a>
-    </li>`;
+  const res = p => { const w = (p.outcomes || []).filter(isAward); return w.length ? w.map(o => o.prize).join(' · ') : (p.outcomes || []).map(o => o.prize).join(' · ') || p.summary; };
+  return `<figure class="grid" style="--yrs:${y1 - y0 + 1}" aria-labelledby="g-cap">
+  <div class="g-years" aria-hidden="true">${Array.from({ length: y1 - y0 + 1 }, (_, i) => `<span>${y0 + i}</span>`).join('')}</div>
+  <ol>
+${rows.map(p => {
+    const name = p.featured ? `<a href="#p-${p.id}">${esc(p.name)}</a>` : esc(p.name);
+    return `    <li class="${p.featured ? 'is-f' : ''}"${p.color ? ` style="--c:${esc(p.color)}"` : ''}><span class="g-name">${name}<small>${esc(p.kind)}</small></span><span class="g-track" aria-hidden="true"><i class="g-bar" style="--s:${x(p.start)}%;--e:${x(p.end || nowYM)}%"></i>${(p.outcomes || []).map(o => `<span class="g-mk" style="--x:${x(o.date)}%">${mk(o)}</span>`).join('')}</span><span class="g-out">${esc(res(p))}</span><span class="sr">${range(p)}${(p.outcomes || []).map(o => `, ${fmt(o.date)} ${o.title} ${o.prize}`).join('')}</span></li>`;
   }).join('\n')}
   </ol>
-  </div>
+  <figcaption id="g-cap" class="legend">${[1, 2, 3, 'x'].map(t => `<span>${mark(t)}${TIER[t]}</span>`).join('')}<span><i class="sw" aria-hidden="true"></i>진행 기간</span></figcaption>
 </figure>`;
 }
 
@@ -77,29 +60,62 @@ const roleBlock = p => {
   return `<dl class="p-role"><div><dt>내가 만든 것</dt><dd>${esc([].concat(me ? me.what : p.role).join(', '))}</dd></div>${team ? `<div><dt>팀이 한 것</dt><dd>${esc([].concat(team.what).join(', '))}</dd></div>` : ''}</dl>`;
 };
 
-// ---------- 프로젝트 카드 (같은 틀 ×3) ----------
-// 카드 = 3층: 제목(문제→결과) / 숫자 하나 / 개조식 세 줄. 나머지 근거는 상세 페이지로.
-const card = (p, i) => {
-  const m = p.metric, me = ((p.case && p.case.roleSplit) || []).find(r => r.who === '나');
-  const key = p.decisions[0], won = (p.outcomes || []).some(o => o.kind === 'award');
-  return `
-<article class="proj" id="p-${p.id}" aria-labelledby="t-${p.id}">
-  <div class="p-text">
-    <p class="p-meta"><b>${no(i)} ${esc(p.name)}</b>${esc(p.kname)}, ${range(p)}${p.origin ? `, ${esc(p.origin)}` : ''}</p>
-    <p class="p-mine"><span>${esc(p.team)} 팀에서 내 담당</span>${esc([].concat(me ? me.what : p.role).join(', '))}</p>
-    <h2 class="p-title" id="t-${p.id}">${esc(p.headline)}</h2>
-    <p class="p-check"><a href="#v-${p.id}">${p.media && p.media.type === 'video' ? '시연 영상' : '실제 화면'}</a><a href="work/${p.id}/#eval">평가 방법</a><a href="work/${p.id}/">설계 과정</a>${(p.links || []).filter(l => l.href && l.href !== '#').map(l => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}</p>
-    <p class="scene">${esc(p.scene)}</p>
-    <p class="p-num"><span class="was">${m.before}${esc(m.unit)}</span><span class="arr" aria-hidden="true">→</span><b>${m.after}<small>${esc(m.unit)}</small></b><span class="what"><b>${esc(m.label)}</b>${m.better === 'lower' ? ' (적을수록 좋음)' : ''}<br>${esc(m.beforeLabel)} ${m.before}${esc(m.unit)} → ${esc(m.afterLabel)} ${m.after}${esc(m.unit)}, ${esc(m.set || '')}</span></p>
-    <dl class="facts">
-      ${m.second ? `<div><dt>현장 효과</dt><dd>${esc(m.second)}</dd></div>` : ''}
-      <div><dt>핵심 판단</dt><dd>${esc(key.title)} → <b>${esc(key.effectLabel)} ${esc(key.effect)}</b></dd></div>
-      ${(p.outcomes || []).length ? `<div><dt>${won ? '수상' : '공개'}</dt><dd>${p.outcomes.map(o => `<span class="aw">${mk(o)}${esc(o.title)} ${esc(o.prize)}${o.rank ? `(${esc(o.rank)})` : ''}</span>`).join('')}</dd></div>` : ''}
-    </dl>
-    <p class="p-links"><a class="go" href="work/${p.id}/">설계와 평가 과정 보기</a>${p.case && p.case.slides.length ? `<a href="work/${p.id}/#slides">발표자료 ${p.case.slides.length}쪽</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
+// ---------- 첫 화면: 왼쪽 목록 + 오른쪽 무대 (같은 틀 ×3, 목록에서 고르면 무대가 바뀐다) ----------
+const role = p => [].concat((((p.case && p.case.roleSplit) || []).find(r => r.who === '나') || {}).what || p.role).join(', ');
+const logo = p => p.logo ? `<img class="logo" src="${esc(p.logo)}" alt="" width="28" height="28">` : `<span class="logo" style="--c:${esc(p.color || '#8B95A1')}" aria-hidden="true">${esc(p.name[0])}</span>`;
+const bars = m => {
+  const max = Math.max(m.before, m.after, m.unit === '%' ? 100 : 0);
+  const row = (l, v, c) => `<li class="${c}"><span>${esc(l)}</span><i style="--w:${(v / max * 100).toFixed(1)}%"></i><b>${v}${esc(m.unit)}</b></li>`;
+  return `<ol class="bars">${row(m.beforeLabel, m.before, 'was')}${row(m.afterLabel, m.after, 'now')}</ol>`;
+};
+const awards = (p, full) => (p.outcomes || []).length ? `<ul class="aw${full ? ' is-full' : ''}">${p.outcomes.map(o => `<li>${mk(o)}<b>${esc(o.prize)}</b>${esc(o.title)}${full ? `<small>${[fmt(o.date), o.rank, o.host].filter(Boolean).map(esc).join(' · ')}</small>` : o.rank ? ` · ${esc(o.rank)}` : ''}</li>`).join('')}</ul>` : '';
+
+const tab = (p, i) => `<li><button type="button" role="tab" id="tab-${p.id}" aria-controls="s-${p.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>
+  ${logo(p)}<span class="t-name"><b>${esc(p.name)}</b><small>${fmt(p.start)}</small></span>
+  <span class="t-head">${esc(p.headline)}</span>
+  <span class="t-aw">${(p.outcomes || []).length ? `${mk(p.outcomes[0])}${(p.outcomes || []).map((o, j) => j ? esc(o.prize) : `${esc(o.prize)} ${esc(o.title)}`).join(' · ')}` : ''}</span>
+  <span class="t-num"><b>${p.metric.after}<small>${esc(p.metric.unit)}</small></b>${esc(p.metric.short || p.metric.label)}<br>${p.metric.before}${esc(p.metric.unit)}에서</span>
+</button></li>`;
+
+const stage = (p, i) => {
+  const m = p.metric;
+  return `<article class="sp" id="s-${p.id}" role="tabpanel" aria-labelledby="tab-${p.id}"${i ? ' data-off' : ''}>
+  <p class="st-meta"><b>${esc(p.name)}</b>${range(p)} · ${esc(p.team)} 팀${p.origin ? ` · ${esc(p.origin)}` : ''}</p>
+  <h2 class="st-title">${esc(p.headline)}</h2>
+  <p class="mine"><span>내 담당</span>${esc(role(p))}</p>
+  <figure class="frame" id="v-${p.id}"><div class="vwrap">${media(p)}${p.media && p.media.short ? `<figcaption class="cap">${esc(p.media.short)}</figcaption>` : ''}</div></figure>
+  <div class="ev">
+    <div class="ev-m"><p class="ev-h"><b>${esc(m.short || m.label)}</b>${esc(m.set || '')}</p>${bars(m)}${p.decisions[0] ? `<p class="key">${esc(p.decisions[0].title)} → <b>${esc(p.decisions[0].effectLabel)} ${esc(p.decisions[0].effect)}</b></p>` : ''}</div>
+    ${m.alt ? `<div class="ev-s"><p class="alt"><b>${esc(m.alt.value)}</b>${esc(m.alt.label)}</p><p class="alt-c">${esc(m.alt.cond || '')}</p></div>` : ''}
   </div>
-  <figure class="p-media" id="v-${p.id}"><div class="vwrap">${media(p)}</div>${p.media && p.media.caption ? `<figcaption>${esc(p.media.caption)}</figcaption>` : ''}</figure>
+  <div class="aw-m">${awards(p)}</div>
+  <p class="go"><a href="work/${p.id}/#eval">${esc(p.more)}</a><a href="work/${p.id}/">설계 결정 ${p.decisions.length}개와 이유</a>${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
 </article>`;
+};
+
+// ---------- 프로젝트 장: 설계 선택이 기능을 어떻게 바꿨나 (펼치지 않아도 보이게) ----------
+const chapter = (p, i) => {
+  const c = p.case || {};
+  const arch = (c.architecture || []).filter(n => n.detail);
+  return `
+<section class="ch wrap" id="p-${p.id}" aria-labelledby="h-${p.id}">
+  <p class="ch-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b>${esc(p.kname)} · ${range(p)} · ${esc(p.team)} 팀${p.status ? ` · ${esc(p.status)}` : ''}</p>
+  ${i === 0 ? `<h2 id="h-${p.id}" class="ch-again">${esc(p.name)} 설계와 평가</h2>` : `<div class="ch-top">
+    <div><h2 id="h-${p.id}">${esc(p.headline)}</h2>
+    <p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
+    <p class="mine"><span>내 담당</span>${esc(role(p))}</p></div>
+    <figure class="frame is-sm"><div class="vwrap">${media(p)}${p.media && p.media.short ? `<figcaption class="cap">${esc(p.media.short)}</figcaption>` : ''}</div></figure>
+  </div>`}
+${arch.length ? `  <h3 class="ch-h">처리 흐름과 내 구현</h3>
+  <ol class="pipe" style="--k:${arch.length}">${arch.map(n => `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine ? '<span>내 담당</span>' : ''}</p><p>${esc(n.detail)}</p>${n.effect ? `<p class="fx">${esc(n.effect)}</p>` : ''}</li>`).join('')}</ol>` : ''}
+  <div class="ch-ev">
+    <div>${c.ablation ? `<h3 class="ch-h">${esc(p.metric.label)}<small>같은 평가셋에서 하나씩 더함</small></h3>
+      <ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : `<h3 class="ch-h">${esc(p.metric.label)}</h3>${bars(p.metric)}`}
+      <p class="cond">${esc(p.metric.def || p.metric.set || '')}</p></div>
+    <div><h3 class="ch-h">설계 판단과 효과</h3><ol class="dec">${p.decisions.map(d => `<li><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span><p>${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`).join('')}</ol></div>
+  </div>
+  <div class="ch-foot">${awards(p, true)}<p class="go">${(c.slides || []).length ? `<a href="work/${p.id}/#slides">발표자료 ${c.slides.length}쪽 웹으로 보기</a>` : ''}${(c.failures || []).length ? `<a href="work/${p.id}/#fail">실패 사례 ${c.failures.length}건과 수정 내용</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p></div>
+</section>`;
 };
 
 function ledger() {
@@ -129,7 +145,6 @@ const page = ({ title, desc, base, body, cls = '' }) => `<!doctype html>
 <meta name="theme-color" content="#0F1115">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-gov-dynamic-subset.min.css">
-<link rel="stylesheet" href="https://hangeul.pstatic.net/hangeul_static/css/maru-buri.css">
 <link rel="stylesheet" href="${base}styles.css">
 <script>document.documentElement.classList.add('js')</script>
 <script src="${base}app.js" defer></script>
@@ -142,7 +157,7 @@ ${body}
 `;
 
 const links = (base = '') => `<p class="links">${site.person.links.map(l => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}<a href="${base}resume.pdf">PDF 이력서</a></p>`;
-const bar = (base = '') => `<header class="bar wrap">${base ? `<a class="bar-name" href="${base}">${esc(site.person.name)}</a>` : '<span></span>'}${links(base)}</header>`;
+const bar = (base = '') => `<header class="bar wrap"><a class="bar-name" href="${base || './'}">${esc(site.person.name)}</a>${links(base)}</header>`;
 const foot = (base = '') => `<footer class="site-foot wrap"><p><b>${esc(site.person.name)}</b>${esc(site.person.affiliation)}</p>${links(base)}</footer>`;
 
 const home = page({
@@ -151,21 +166,21 @@ const home = page({
   base: '',
   body: `${bar()}
 <main id="main" tabindex="-1">
-  <section class="id wrap" aria-label="소개">
-    <p class="to" hidden></p>
-    <h1>${esc(site.person.name)}<span>${esc(site.person.field)}</span></h1>
-    <p class="who"><span>${esc(site.person.affiliation)}</span><span>${esc(site.person.grad)}</span></p>
-    ${site.person.pitch ? `<p class="pitch">${esc(site.person.pitch)}</p>` : ''}
-    <p class="stack-line">주력 ${(site.person.stack || []).map(esc).join(', ')}</p>
-    <nav class="toc" aria-label="대표 작업 목차"><span>대표 작업 ${F.length}</span>${F.map((p, i) => `<a href="#p-${p.id}"><b>${no(i)}</b>${esc(p.name)}<small>${esc(p.kname)}</small></a>`).join('')}</nav>
+  <section class="lead wrap" aria-label="소개와 대표 작업">
+    <div class="lead-id">
+      <p class="to" hidden></p>
+      <p class="who">${[site.person.field, site.person.affiliation, site.person.grad].map(esc).join(' · ')}</p>
+      <h1><span class="sr">${esc(site.person.name)}, </span>${esc(site.person.headline || site.person.pitch).replace(/\n/g, '<br>')}</h1>
+      <ol class="idx" role="tablist" aria-label="대표 작업 ${F.length}개">${F.map(tab).join('')}</ol>
+      <a class="all" href="#record">프로젝트 ${stats.projects}개 · 수상 ${stats.awards}회 전체 기록</a>
+    </div>
+    <div class="stage">${F.map(stage).join('\n')}</div>
   </section>
-  <div class="work wrap">
-    ${F.map(card).join('\n')}
-  </div>
-  <section class="record wrap" aria-labelledby="h-all">
-    <h2 id="h-all" class="sec">전체 기록<small>프로젝트 ${stats.projects}, 수상 ${stats.awards}, 그중 상위 ${stats.top}</small></h2>
-    ${outcomeMap()}
-    ${ledger()}
+  ${F.map(chapter).join('\n')}
+  <section class="record wrap" id="record" aria-labelledby="h-all">
+    <h2 id="h-all" class="sec">전체 기록<small>${Math.min(...P.map(p => +p.start.slice(0, 4)))}–${today.getFullYear()} · 프로젝트 ${stats.projects}개 · 수상 ${stats.awards}회</small></h2>
+    ${grid()}
+    <details class="list"><summary>연도별 목록과 활동 ${(site.activities || []).length}건 보기</summary>${ledger()}</details>
   </section>
 </main>
 ${foot()}`,
@@ -219,7 +234,7 @@ ${c.ablation ? `    <h3 class="ab-h">무엇이 얼마나 기여했나 <small>같
     <tbody>${c.evaluation.map(e => `<tr><th scope="row">${esc(e.item)}</th><td data-label="이전" class="${e.baseline ? 'base' : 'none'}">${esc(e.baseline || '미측정')}</td><td data-label="이후" class="res">${esc(e.result || '미측정')}</td><td data-label="조건" class="cond">${esc(e.condition)}</td></tr>`).join('')}</tbody></table>
   </section>
 ${(c.failures || []).length ? `
-  <section class="cs"><h2>안 된 것과 고친 것</h2>
+  <section class="cs" id="fail"><h2>안 된 것과 고친 것</h2>
     <ul class="fail">${c.failures.map(x => `<li><p class="f-h"><b>${esc(x.what)}</b><span class="st" data-st="${esc(x.status)}">${esc(x.status)}</span></p>${x.cause ? `<p class="f-sub"><span>원인</span>${esc(x.cause)}</p>` : ''}<p class="f-sub"><span>증상</span>${esc(x.repro)}</p><p class="f-sub"><span>조치</span>${esc(x.fix)}</p><p class="f-sub"><span>검증</span>${esc(x.verify || '미검증')}</p></li>`).join('')}</ul>
   </section>` : ''}
   <section class="cs"><h2>팀에서 내가 맡은 범위</h2>

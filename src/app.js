@@ -3,10 +3,25 @@ const to = new URLSearchParams(location.search).get('to');
 const toEl = document.querySelector('.to');
 if (to && toEl) { const b = document.createElement('b'); b.textContent = to.slice(0, 40); toEl.append(b, '께 드리는 포트폴리오입니다.'); toEl.hidden = false; }
 
-// 성과 지도: 화면에 들어올 때 한 번 그린다
-const map = document.querySelector('.map');
-if (map && !('IntersectionObserver' in window)) map.classList.add('is-in');
-else if (map) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { map.classList.add('is-in'); o.disconnect(); } }, { threshold: 0.3 }).observe(map);
+// 대표 작업 목록 → 오른쪽 무대 전환 (화살표 키로도 이동)
+const tl = document.querySelector('.idx');
+if (tl) {
+  const tabs = [...tl.querySelectorAll('[role="tab"]')];
+  const pick = (t, focus) => {
+    tabs.forEach(x => {
+      const on = x === t, panel = document.getElementById(x.getAttribute('aria-controls'));
+      x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1;
+      panel.toggleAttribute('data-off', !on);
+    });
+    if (focus) t.focus();
+  };
+  tl.addEventListener('click', e => { const t = e.target.closest('[role="tab"]'); if (t) pick(t); });
+  tl.addEventListener('keydown', e => {
+    const i = tabs.indexOf(document.activeElement), d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (i < 0 || !d) return;
+    e.preventDefault(); pick(tabs[(i + d + tabs.length) % tabs.length], true);
+  });
+}
 
 // 영상: 화면에 보일 때만 재생 (동작 줄이기 설정이면 자동 재생 안 함)
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');

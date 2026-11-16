@@ -1,6 +1,6 @@
-# 설계서 — 포트폴리오 양식 (현재 v3)
+# 설계서 — 포트폴리오 양식 (현재 v6)
 
-> v3의 구조와 근거는 [docs/research/SYNTHESIS.md](research/SYNTHESIS.md). 아래는 v2 기록(한국 기준 토큰)과 v1 기록이다.
+> v6 구조·검수 기록과 v3~v5 근거는 [docs/research/SYNTHESIS.md](research/SYNTHESIS.md). 피그마 시안: "포트폴리오 양식 v6" 파일(시안 A·B·C·B2~B4, 채택 B3). 아래는 v2·v1 기록이다.
 
 ## v2에서 바뀐 것과 이유
 v1은 정보를 다 보여 주려다 홈 2,066자·글자 스타일 22종·테두리 49개·회색 글씨 71%가 되어 "읽고 싶지 않은" 화면이 됐다.

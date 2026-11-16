@@ -18,21 +18,21 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794755993.149494,
-    "seen": 1794756290.7186885,
-    "ast_hash": "af8144330182e2267f9a3181c19c4e62",
+    "mtime": 1794805924.6497803,
+    "seen": 1794806097.1636722,
+    "ast_hash": "ba2d208e78e6590949a3ca2bd5938a99",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794756181.0280607,
-    "seen": 1794756290.7186904,
-    "ast_hash": "f286b33e70273dd4e6fa5fd240ecfdaf",
+    "mtime": 1794805790.9765718,
+    "seen": 1794806097.1636767,
+    "ast_hash": "f7f77c0fa73eb21a0ce85221e2f6c2a4",
     "semantic_hash": ""
   },
   "src/app.js": {
-    "mtime": 1794753742.0327342,
-    "seen": 1794753820.9236908,
-    "ast_hash": "5db5f9551570a989e09280911e59aed0",
+    "mtime": 1794804978.6581016,
+    "seen": 1794806097.1636796,
+    "ast_hash": "1ac841a841854ed0dea37ad3c76cd7b9",
     "semantic_hash": ""
   },
   "tools/cx.sh": {
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "docs/DESIGN.md": {
-    "mtime": 1794754141.6915126,
-    "seen": 1794755176.252764,
-    "ast_hash": "abd6135317db5c4abe2378df963ed434",
+    "mtime": 1794805842.7395494,
+    "seen": 1794806097.163726,
+    "ast_hash": "f8dad41f78ae1e041ae9cf89a5a015c1",
     "semantic_hash": ""
   },
   "docs/PERSONAS.md": {
@@ -252,9 +252,21 @@
     "semantic_hash": ""
   },
   "docs/research/SYNTHESIS.md": {
-    "mtime": 1794756287.4137447,
-    "seen": 1794756290.7187278,
-    "ast_hash": "551c1a590eed5ea2e4d53614d88097d3",
+    "mtime": 1794806089.6672196,
+    "seen": 1794806097.1637537,
+    "ast_hash": "c7f78fc94e64ba57d69c9e4c34f1ecd6",
+    "semantic_hash": ""
+  },
+  "docs/research/F-bigco-youtube.md": {
+    "mtime": 1794803877.7563033,
+    "seen": 1794806097.1637492,
+    "ast_hash": "7b67c7786d79ad395d5cc275ca1e9f2d",
+    "semantic_hash": ""
+  },
+  "docs/research/G-praised-portfolios.md": {
+    "mtime": 1794804150.0238993,
+    "seen": 1794806097.1637516,
+    "ast_hash": "8a527305be6cfb955e380e52af8bb4cf",
     "semantic_hash": ""
   }
 }
