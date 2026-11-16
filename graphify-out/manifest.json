@@ -24,9 +24,9 @@
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794805790.9765718,
-    "seen": 1794806097.1636767,
-    "ast_hash": "f7f77c0fa73eb21a0ce85221e2f6c2a4",
+    "mtime": 1794822688.5896094,
+    "seen": 1794823176.313351,
+    "ast_hash": "e061244ad3b621cda16eb8179d4e01dc",
     "semantic_hash": ""
   },
   "src/app.js": {
@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "docs/research/SYNTHESIS.md": {
-    "mtime": 1794806089.6672196,
-    "seen": 1794806097.1637537,
-    "ast_hash": "c7f78fc94e64ba57d69c9e4c34f1ecd6",
+    "mtime": 1794823173.6723318,
+    "seen": 1794823176.3133895,
+    "ast_hash": "00cb625afc968359ac0716524f956cc0",
     "semantic_hash": ""
   },
   "docs/research/F-bigco-youtube.md": {

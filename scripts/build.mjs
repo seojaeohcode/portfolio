@@ -70,16 +70,16 @@ const bars = m => {
 };
 const awards = (p, full) => (p.outcomes || []).length ? `<ul class="aw${full ? ' is-full' : ''}">${p.outcomes.map(o => `<li>${mk(o)}<b>${esc(o.prize)}</b>${esc(o.title)}${full ? `<small>${[fmt(o.date), o.rank, o.host].filter(Boolean).map(esc).join(' · ')}</small>` : o.rank ? ` · ${esc(o.rank)}` : ''}</li>`).join('')}</ul>` : '';
 
-const tab = (p, i) => `<li><button type="button" role="tab" id="tab-${p.id}" aria-controls="s-${p.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>
+const tab = (p, i) => `<li><button type="button" role="tab" id="tab-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''} aria-controls="s-${p.id}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ''}>
   ${logo(p)}<span class="t-name"><b>${esc(p.name)}</b><small>${fmt(p.start)}</small></span>
   <span class="t-head">${esc(p.headline)}</span>
   <span class="t-aw">${(p.outcomes || []).length ? `${mk(p.outcomes[0])}${(p.outcomes || []).map((o, j) => j ? esc(o.prize) : `${esc(o.prize)} ${esc(o.title)}`).join(' · ')}` : ''}</span>
-  <span class="t-num"><b>${p.metric.after}<small>${esc(p.metric.unit)}</small></b>${esc(p.metric.short || p.metric.label)}<br>${p.metric.before}${esc(p.metric.unit)}에서</span>
+  <span class="t-num"><b><span class="t-was">${p.metric.before}<span class="sr">${esc(p.metric.unit)}에서</span><span aria-hidden="true"> →</span></span> ${p.metric.after}<small>${esc(p.metric.unit)}</small></b>${esc(p.metric.short || p.metric.label)}</span>
 </button></li>`;
 
 const stage = (p, i) => {
   const m = p.metric;
-  return `<article class="sp" id="s-${p.id}" role="tabpanel" aria-labelledby="tab-${p.id}"${i ? ' data-off' : ''}>
+  return `<article class="sp" id="s-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''} role="tabpanel" aria-labelledby="tab-${p.id}"${i ? ' data-off' : ''}>
   <p class="st-meta"><b>${esc(p.name)}</b>${range(p)} · ${esc(p.team)} 팀${p.origin ? ` · ${esc(p.origin)}` : ''}</p>
   <h2 class="st-title">${esc(p.headline)}</h2>
   <p class="mine"><span>내 담당</span>${esc(role(p))}</p>
@@ -98,7 +98,7 @@ const chapter = (p, i) => {
   const c = p.case || {};
   const arch = (c.architecture || []).filter(n => n.detail);
   return `
-<section class="ch wrap" id="p-${p.id}" aria-labelledby="h-${p.id}">
+<section class="ch wrap" id="p-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''} aria-labelledby="h-${p.id}">
   <p class="ch-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b>${esc(p.kname)} · ${range(p)} · ${esc(p.team)} 팀${p.status ? ` · ${esc(p.status)}` : ''}</p>
   ${i === 0 ? `<h2 id="h-${p.id}" class="ch-again">${esc(p.name)} 설계와 평가</h2>` : `<div class="ch-top">
     <div><h2 id="h-${p.id}">${esc(p.headline)}</h2>
