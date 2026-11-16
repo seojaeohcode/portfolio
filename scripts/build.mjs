@@ -80,13 +80,13 @@ const tab = (p, i) => `<li><button type="button" role="tab" id="tab-${p.id}"${p.
 const stage = (p, i) => {
   const m = p.metric;
   return `<article class="sp" id="s-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''} role="tabpanel" aria-labelledby="tab-${p.id}"${i ? ' data-off' : ''}>
-  <p class="st-meta"><b>${esc(p.name)}</b>${range(p)} · ${esc(p.team)} 팀${p.origin ? ` · ${esc(p.origin)}` : ''}</p>
+  <div class="sp-h"><p class="st-meta"><b>${esc(p.name)}</b>${range(p)} · ${esc(p.team)} 팀${p.origin ? ` · ${esc(p.origin)}` : ''}</p>
   <h2 class="st-title">${esc(p.headline)}</h2>
-  <p class="mine"><span>내 담당</span>${esc(role(p))}</p>
+  <p class="mine"><span>내 담당</span>${esc(role(p))}</p></div>
   <figure class="frame" id="v-${p.id}"><div class="vwrap">${media(p)}${p.media && p.media.short ? `<figcaption class="cap">${esc(p.media.short)}</figcaption>` : ''}</div></figure>
   <div class="ev">
-    <div class="ev-m"><p class="ev-h"><b>${esc(m.short || m.label)}</b>${esc(m.set || '')}</p>${bars(m)}${p.decisions[0] ? `<p class="key">${esc(p.decisions[0].title)} → <b>${esc(p.decisions[0].effectLabel)} ${esc(p.decisions[0].effect)}</b></p>` : ''}</div>
-    ${m.alt ? `<div class="ev-s"><p class="alt"><b>${esc(m.alt.value)}</b>${esc(m.alt.label)}</p><p class="alt-c">${esc(m.alt.cond || '')}</p></div>` : ''}
+  <div class="ev-m"><p class="ev-h"><b>${esc(m.short || m.label)}</b>${esc(m.set || '')}</p>${bars(m)}${p.decisions[0] ? `<p class="key">${esc(p.decisions[0].title)} → <b>${esc(p.decisions[0].effectLabel)} ${esc(p.decisions[0].effect)}</b></p>` : ''}</div>
+  <div class="ev-s">${m.alt ? `<p class="alt"><b>${esc(m.alt.value)}</b>${esc(m.alt.label)}</p><p class="alt-c">${esc(m.alt.cond || '')}</p>` : ''}</div>
   </div>
   <div class="aw-m">${awards(p)}</div>
   <p class="go"><a href="work/${p.id}/#eval">${esc(p.more)}</a><a href="work/${p.id}/">설계 결정 ${p.decisions.length}개와 이유</a>${(p.links || []).map(l => link(l.href, l.label)).join('')}</p>
@@ -97,23 +97,32 @@ const stage = (p, i) => {
 const chapter = (p, i) => {
   const c = p.case || {};
   const arch = (c.architecture || []).filter(n => n.detail);
+  const decOf = n => p.decisions.filter(d => d.step === n.name);
+  const loose = p.decisions.filter(d => !arch.some(n => n.name === d.step));
+  const allMine = arch.every(n => n.mine);
+  const dec = d => `<div class="pp-dec"><p class="pp-n"><b>${esc(d.effect)}</b>${esc(d.effectLabel)}</p><p class="pp-t">${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</div>`;
+  // 판단이 붙은 단계는 넓게: 칸마다 빈 곳이 덜 생기게
+  const cols = arch.map(n => `${1 + 0.6 * decOf(n).length}fr`).join(' ');
   return `
-<section class="ch wrap" id="p-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''} aria-labelledby="h-${p.id}">
+<section class="ch wrap" id="p-${p.id}" aria-labelledby="h-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''}>
   <p class="ch-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b>${esc(p.kname)} · ${range(p)} · ${esc(p.team)} 팀${p.status ? ` · ${esc(p.status)}` : ''}</p>
-  ${i === 0 ? `<h2 id="h-${p.id}" class="ch-again">${esc(p.name)} 설계와 평가</h2>` : `<div class="ch-top">
-    <div><h2 id="h-${p.id}">${esc(p.headline)}</h2>
+  <div class="ch-top${i === 0 ? ' is-first' : ''}">
+    <div class="ch-a">${i === 0 ? `<h2 id="h-${p.id}" class="ch-again">${esc(p.name)} 설계와 평가</h2>` : `<h2 id="h-${p.id}">${esc(p.headline)}</h2>
     <p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
-    <p class="mine"><span>내 담당</span>${esc(role(p))}</p></div>
-    <figure class="frame is-sm"><div class="vwrap">${media(p)}</div></figure>
-  </div>`}
-${arch.length ? `  <h3 class="ch-h">처리 흐름과 내 구현</h3>
-  <ol class="pipe" style="--k:${arch.length}">${arch.map(n => `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine && !arch.every(x => x.mine) ? '<span>내 담당</span>' : ''}</p><p>${esc(n.detail)}</p>${n.effect ? `<p class="fx">${esc(n.effect)}</p>` : ''}</li>`).join('')}</ol>` : ''}
-  <div class="ch-ev">
-    <div>${c.ablation ? `<h3 class="ch-h">${esc(p.metric.label)}<small>같은 평가셋, 기능을 하나씩 추가</small></h3>
-      <p class="cond">${esc(p.metric.def || p.metric.set || '')}</p>
-      <ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : `<h3 class="ch-h">${esc(p.metric.label)}</h3><p class="cond">${esc(p.metric.def || p.metric.set || '')}</p>${bars(p.metric)}`}</div>
-    <div><h3 class="ch-h">설계 판단과 효과</h3><ol class="dec">${p.decisions.map(d => `<li><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span><p>${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`).join('')}</ol></div>
+    <p class="mine"><span>내 담당</span>${esc(role(p))}</p>`}</div>
+    <div class="ch-b">
+      <div><h3 class="ch-h">${esc(p.metric.label)}</h3><p class="cond">${c.ablation ? '같은 평가셋에서 기능을 하나씩 추가. ' : ''}${esc(p.metric.def || p.metric.set || '')}</p></div>
+      <div>${c.ablation ? `<ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : bars(p.metric)}</div>
+    </div>
+    ${i === 0 ? '' : `<figure class="frame is-sm"><div class="vwrap">${media(p)}</div></figure>`}
   </div>
+${arch.length ? `  <h3 class="ch-h">구현과 선택 이유</h3>
+  <ol class="pipe" style="--cols:${cols}">${arch.map(n => {
+    const ds = decOf(n);
+    const fx = n.effect && !ds.some(d => n.effect.includes(d.effect)) ? `<p class="fx">${esc(n.effect)}</p>` : '';
+    return `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine && !allMine ? '<span>내 담당</span>' : ''}</p><div class="pp-d"><p>${esc(n.detail)}</p>${fx}</div><div class="pp-x">${ds.map(dec).join('')}</div></li>`;
+  }).join('')}</ol>` : ''}
+${loose.length ? `  <ol class="dec">${loose.map(d => `<li><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span><p>${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`).join('')}</ol>` : ''}
   <div class="ch-foot">${awards(p, true)}<p class="go">${(c.slides || []).length ? `<a href="work/${p.id}/#slides">발표자료 ${c.slides.length}쪽 웹으로 보기</a>` : ''}${(c.failures || []).length ? `<a href="work/${p.id}/#fail">실패 사례 ${c.failures.length}건과 수정 내용</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p></div>
 </section>`;
 };
@@ -167,10 +176,12 @@ const home = page({
   body: `${bar()}
 <main id="main" tabindex="-1">
   <section class="lead wrap" aria-label="소개와 대표 작업">
-    <div class="lead-id">
+    <div class="lead-h">
       <p class="to" hidden></p>
       <p class="who">${[site.person.field, site.person.affiliation, site.person.grad].map(esc).join(' · ')}</p>
       <h1><span class="sr">${esc(site.person.name)}, </span>${esc(site.person.headline || site.person.pitch).replace(/\n/g, '<br>')}</h1>
+    </div>
+    <div class="lead-l">
       <ol class="idx" role="tablist" aria-label="대표 작업 ${F.length}개">${F.map(tab).join('')}</ol>
       <a class="all" href="#record">프로젝트 ${stats.projects}개 · 수상 ${stats.awards}회 전체 기록</a>
     </div>
@@ -198,7 +209,7 @@ const casePage = p => {
   <nav class="crumb"><a href="${base}#p-${p.id}">대표 작업으로 돌아가기</a></nav>
   <header class="case-head">
     <p class="p-meta"><b>${esc(p.name)}</b><span>${esc(p.kname)}</span></p>
-    <p class="p-sub">${range(p)}<span>${esc(p.team)} 팀</span><span>${esc(p.status)}</span></p>
+    <p class="p-sub">${[range(p), `${esc(p.team)} 팀`, esc(p.status || '')].filter(Boolean).join(' · ')}</p>
     <h1>${esc(p.headline)}</h1>
     ${roleBlock(p)}
   </header>

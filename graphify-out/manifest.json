@@ -18,15 +18,15 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794824119.4169528,
-    "seen": 1794824166.2257516,
-    "ast_hash": "d10d71fdfd695684e1e7a16ec4a401cf",
+    "mtime": 1794825703.8510385,
+    "seen": 1794826045.4235933,
+    "ast_hash": "a1c23d8822026ae853e95f51b1bd3101",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794823981.9173594,
-    "seen": 1794824166.2257533,
-    "ast_hash": "00e9406407f78073f25745128e38273c",
+    "mtime": 1794826029.2068036,
+    "seen": 1794826045.423595,
+    "ast_hash": "76016f1dabfb6d7a9c12f495c1753b00",
     "semantic_hash": ""
   },
   "src/app.js": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "assets/media/furrow-thumb.webp": {
-    "mtime": 1794823944.8293173,
-    "seen": 1794824166.2257924,
-    "ast_hash": "d65a456a78173b403b8052db832d67d6",
+    "mtime": 1794825478.010796,
+    "seen": 1794826045.4236345,
+    "ast_hash": "dd69a92bb66d3163cf112114a9fb509d",
     "semantic_hash": ""
   },
   "assets/media/ledgerline-thumb.webp": {
@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "docs/research/SYNTHESIS.md": {
-    "mtime": 1794824163.6017745,
-    "seen": 1794824166.2257915,
-    "ast_hash": "bacc8f6b98a6d11e25eb7f7dac7747df",
+    "mtime": 1794826042.8364644,
+    "seen": 1794826045.4236329,
+    "ast_hash": "bc37178b246c4754c45ee1a4ec37b2b0",
     "semantic_hash": ""
   },
   "docs/research/F-bigco-youtube.md": {

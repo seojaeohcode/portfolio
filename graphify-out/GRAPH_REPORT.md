@@ -1,17 +1,17 @@
 # Graph Report - 포폴  (2026-11-16)
 
 ## Corpus Check
-- 34 files · ~52,826 words
+- 34 files · ~53,114 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 8, .css 1)
 
 ## Summary
-- 385 nodes · 424 edges · 29 communities (25 shown, 4 thin omitted)
+- 386 nodes · 425 edges · 29 communities (25 shown, 4 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.89)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `48c45fcf`
+- Built from commit: `a85925e6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -52,8 +52,8 @@
 4. `공개 원문 12개` - 13 edges
 5. `Quick Rules — Monolith Fast Path 전용 (v2.0)` - 13 edges
 6. `설계서 — 포트폴리오 양식 (현재 v6)` - 13 edges
-7. `Humanizer: remove AI writing patterns` - 11 edges
-8. `조사 종합 → v3 설계 규칙` - 10 edges
+7. `조사 종합 → v3 설계 규칙` - 11 edges
+8. `Humanizer: remove AI writing patterns` - 11 edges
 9. `포트폴리오 웹사이트의 전달력: 이론·근거·검증 규칙` - 10 edges
 10. `casePage()` - 9 edges
 
@@ -104,7 +104,7 @@ Nodes (9): 1. The kind of business decides everything, 2. The page plan by kind,
 
 ### Community 7 - "설계서 — 포트폴리오 양식 v1"
 Cohesion: 0.08
-Nodes (23): 0. 한 문장, 1. 읽는 시간별 설계 (정보 위계), 2. 시그니처 시각화: 성과 지도, 3. 대표 작업 스트립 (카드 반복 금지), 4. 시각 언어, 5. 감성 설계 (심장을 울리는 부분), 6. 공학적 장치, 7. 금지 목록 (+15 more)
+Nodes (24): 0. 한 문장, 1. 읽는 시간별 설계 (정보 위계), 2. 시그니처 시각화: 성과 지도, 3. 대표 작업 스트립 (카드 반복 금지), 4. 시각 언어, 5. 감성 설계 (심장을 울리는 부분), 6. 공학적 장치, 7. 금지 목록 (+16 more)
 
 ### Community 8 - "신입 AI·소프트웨어 엔지니어 포트폴리오 검수 페르소나"
 Cohesion: 0.22
@@ -176,7 +176,7 @@ Nodes (3): 12개 레퍼런스, 다크 한국어 포트폴리오: 구체적인 3�
 
 ## Knowledge Gaps
 - **1 isolated node(s):** `PATH`
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 280 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 281 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
@@ -195,4 +195,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Quick Rules — Monolith Fast Path 전용 (v2.0)` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
 - **Should `설계서 — 포트폴리오 양식 v1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07692307692307693 - nodes in this community are weakly interconnected._
