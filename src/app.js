@@ -33,7 +33,7 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 // 사용자가 직접 멈추면 다시 보이더라도 자동 재생하지 않는다
 document.querySelectorAll('video.media').forEach(v => {
   io.observe(v);
-  // 기본 컨트롤 대신 화면을 가리지 않는 일시정지/재생 버튼 하나 (5초 넘는 자동 재생의 정지 수단)
+  // 기본 컨트롤 대신 화면을 가리지 않는(오른쪽 위 빈 곳) 일시정지/재생 버튼 하나 (5초 넘는 자동 재생의 정지 수단)
   const b = v.nextElementSibling;
   if (b && b.classList.contains('vbtn')) {
     b.hidden = false;

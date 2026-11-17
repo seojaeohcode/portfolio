@@ -7,6 +7,7 @@
 set -euo pipefail
 model=$1; effort=$2; prompt=$3; out=${4:-/dev/stdout}; shift 4 || shift $#
 export PATH="$HOME/.codex/plugins/.plugin-appserver:$PATH"
+export HEADROOM_WRAP_PROXY_TIMEOUT=${HEADROOM_WRAP_PROXY_TIMEOUT:-150}  # 콜드 스타트가 45초를 넘는 경우가 있음
 exec "$HOME/.ptools/Scripts/headroom.exe" wrap codex -- exec --skip-git-repo-check \
   -m "$model" -c model_reasoning_effort="\"$effort\"" -c web_search='"live"' \
   -C "$(git rev-parse --show-toplevel)" -o "$out" "$@" - < "$prompt"

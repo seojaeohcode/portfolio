@@ -104,33 +104,28 @@ const stage = (p, i) => {
 const chapter = (p, i) => {
   const c = p.case || {};
   const arch = (c.architecture || []).filter(n => n.detail);
-  const decOf = n => p.decisions.filter(d => d.step === n.name);
-  const loose = p.decisions.filter(d => !arch.some(n => n.name === d.step));
+  // 단계는 단계끼리(같은 정보: 이름·설명), 결정은 결정끼리 한 줄에. 결정은 단계 번호 꼬리표로 연결
+  const stepNo = name => arch.findIndex(n => n.name === name);
+  const decs = [...p.decisions].sort((a, b) => (stepNo(a.step) + 99) % 99 - (stepNo(b.step) + 99) % 99);
   const allMine = arch.every(n => n.mine);
-  const dec = d => `<div class="pp-dec"><p class="pp-n"><b>${esc(d.effect)}</b>${esc(d.effectLabel)}</p><p class="pp-t">${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</div>`;
-  // 판단이 붙은 단계는 넓게: 칸마다 빈 곳이 덜 생기게
-  const cols = arch.map(n => `${1 + 0.6 * decOf(n).length}fr`).join(' ');
+  const dec = d => { const k = stepNo(d.step); return `<li>${k >= 0 ? `<p class="tag"><span>${k + 1}</span>${esc(d.step)}</p>` : ''}<p class="pp-n"><b>${esc(d.effect)}</b>${esc(d.effectLabel)}</p><p class="pp-t">${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`; };
   return `
 <section class="ch wrap" id="p-${p.id}" aria-labelledby="h-${p.id}"${p.color ? ` style="--c:${esc(p.color)}"` : ''}>
   <p class="ch-meta"><span class="no">${no(i)}</span><b>${esc(p.name)}</b>${esc(p.kname)} · ${range(p)} · ${esc(p.team)} 팀${p.status ? ` · ${esc(p.status)}` : ''}</p>
   <h2 id="h-${p.id}">${i === 0 ? `${esc(p.name)} 설계와 평가` : esc(p.headline)}</h2>
   ${kpi(p)}
   <div class="ch-top${i === 0 ? ' is-first' : ''}">
-    ${i === 0 ? '' : `<div class="ch-a"><p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
+    ${i === 0 ? '' : '<div class="ch-l">'}${i === 0 ? '' : `<div class="ch-a"><p class="ch-scene">${esc(p.scene)} ${esc(p.summary)}</p>
     <p class="mine"><span>내 담당</span>${esc(role(p))}</p></div>`}
     <div class="ch-b">
-      <div><h3 class="ch-h">${esc(p.metric.label)}</h3><p class="cond">${c.ablation ? '같은 평가셋에서 기능을 하나씩 추가. ' : ''}${esc(p.metric.def || p.metric.set || '')}</p></div>
+      <div class="ch-lead"><h3 class="ch-h">${esc(p.metric.label)}</h3><p class="cond">${c.ablation ? '같은 평가셋에서 기능을 하나씩 추가. ' : ''}${esc(p.metric.def || p.metric.set || '')}</p></div>
       <div>${c.ablation ? `<ol class="abl">${c.ablation.map((a, j) => `<li class="${j === c.ablation.length - 1 ? 'now' : ''}"><span>${esc(a.change)}</span><i style="--w:${parseFloat(a.value)}%"></i><b>${esc(a.value)}</b><em>${a.fp ? `하루 오탐 ${esc(a.fp)}` : ''}</em></li>`).join('')}</ol>` : bars(p.metric)}</div>
-    </div>
+    </div>${i === 0 ? '' : '</div>'}
     ${i === 0 ? '' : `<figure class="frame is-sm"><div class="vwrap">${media(p)}</div></figure>`}
   </div>
 ${arch.length ? `  <h3 class="ch-h">구현과 선택 이유</h3>
-  <ol class="pipe" style="--cols:${cols}">${arch.map(n => {
-    const ds = decOf(n);
-    const fx = n.effect && !ds.some(d => n.effect.includes(d.effect)) ? `<p class="fx">${esc(n.effect)}</p>` : '';
-    return `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><b>${esc(n.name)}</b>${n.mine && !allMine ? '<span>내 담당</span>' : ''}</p><div class="pp-d"><p>${esc(n.detail)}</p>${fx}</div><div class="pp-x">${ds.map(dec).join('')}</div></li>`;
-  }).join('')}</ol>` : ''}
-${loose.length ? `  <ol class="dec">${loose.map(d => `<li><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span><p>${esc(d.title)}</p>${d.why ? `<p class="why">${esc(d.why)}</p>` : ''}</li>`).join('')}</ol>` : ''}
+  <ol class="pipe" style="--k:${arch.length}">${arch.map((n, k) => `<li class="${n.mine ? 'is-mine' : ''}"><p class="pp-h"><span class="pp-no">${k + 1}</span><b>${esc(n.name)}</b>${n.mine && !allMine ? '<span>내 담당</span>' : ''}</p><p class="pp-d">${esc(n.detail)}</p></li>`).join('')}</ol>` : ''}
+${decs.length ? `  <ol class="pdec${decs.length > 3 ? ' is-list' : ''}" style="--k:${Math.min(decs.length, 3)}">${decs.map(dec).join('')}</ol>` : ''}
   <div class="ch-foot"><p class="go">${(c.slides || []).length ? `<a href="work/${p.id}/#slides">발표자료 ${c.slides.length}쪽 웹으로 보기</a>` : ''}${(c.failures || []).length ? `<a href="work/${p.id}/#fail">실패 사례 ${c.failures.length}건과 수정 내용</a>` : ''}${(p.links || []).map(l => link(l.href, l.label)).join('')}</p></div>
 </section>`;
 };
@@ -224,21 +219,22 @@ const casePage = p => {
 
   <section class="cs"><h2>무엇이 문제였나</h2>
     <p class="scene">${esc(p.scene)}</p>
-    <div class="two"><ul class="plain">${c.context.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
-    <div><p class="lbl">지켜야 했던 제약</p><ul class="plain">${c.constraints.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div></div>
+    <ul class="plain">${c.context.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    <p class="lbl sub">지켜야 했던 제약</p><ul class="plain">${c.constraints.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
   </section>
 ${c.flow ? `
   <section class="cs"><h2>현장에서 무엇이 달라졌나</h2>
-    <div class="two ba">${['before', 'after'].map(k => `<div class="${k}"><p class="lbl">${k === 'before' ? '도입 전' : '도입 후'}</p><ol>${c.flow[k].map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`).join('')}</div>
+    <div class="ba"><p class="lbl">도입 전</p><p class="lbl">도입 후</p>${Array.from({ length: Math.max(c.flow.before.length, c.flow.after.length) }, (_, i) => `<p class="b">${esc(c.flow.before[i] || '')}</p><p class="a">${esc(c.flow.after[i] || '')}</p>`).join('')}</div>
   </section>` : ''}
   <section class="cs"><h2>어디를 AI에 맡기고, 어디를 내가 만들었나</h2>
-    <ol class="flow">${c.architecture.map((n, i) => `<li class="${n.mine ? 'is-mine' : ''}"><p class="f-h"><span class="f-no">${i + 1}</span><b>${esc(n.name)}</b><span class="by" data-by="${esc(n.by)}">${esc(n.by)}</span></p><p>${esc(n.detail)}</p>${n.fallback ? `<p class="f-sub"><span>예외</span>${esc(n.fallback)}</p>` : ''}${n.myChange ? `<p class="f-sub is-me"><span>내 작업</span>${esc(n.myChange)}</p>` : ''}</li>`).join('')}</ol>
+    <ol class="flow" style="--k:${c.architecture.length}">${c.architecture.map((n, i) => `<li class="${n.mine ? 'is-mine' : ''}"><p class="f-h"><span class="f-no">${i + 1}</span><b>${esc(n.name)}</b><span class="by" data-by="${esc(n.by)}">${esc(n.by)}</span></p><p>${esc(n.detail)}</p>${n.fallback ? `<p class="f-sub m-only"><span>예외</span>${esc(n.fallback)}</p>` : ''}${n.myChange ? `<p class="f-sub m-only is-me"><span>내 작업</span>${esc(n.myChange)}</p>` : ''}</li>`).join('')}</ol>
+${c.architecture.some(n => n.fallback || n.myChange) ? `    <table class="steps"><thead><tr><th scope="col">단계</th><th scope="col">예외가 생기면</th><th scope="col">내 작업</th></tr></thead><tbody>${c.architecture.map((n, i) => `<tr><th scope="row">${i + 1} ${esc(n.name)}</th><td data-label="예외가 생기면">${esc(n.fallback || '없음')}</td><td data-label="내 작업">${esc(n.myChange || '팀 작업')}</td></tr>`).join('')}</tbody></table>` : ''}
   </section>
 
   <section class="cs"><h2>내가 내린 결정과 버린 대안</h2>
     <ol class="dx">${p.decisions.map(d => `<li>
-      <p class="i-n"><b>${esc(d.effect)}</b><span>${esc(d.effectLabel)}</span></p>
-      <div><h3>${esc(d.title)}</h3><p>${esc(d.why)}</p>${d.alt ? `<p class="f-sub"><span>버린 대안</span>${esc(d.alt)}. ${esc(d.altWhy)}</p>` : ''}${d.cost ? `<p class="f-sub"><span>감수한 것</span>${esc(d.cost)}</p>` : ''}${d.basis ? `<p class="f-sub"><span>측정</span>${esc(d.basis)}</p>` : ''}${d.code && d.code !== '#' ? `<p class="f-sub"><span>구현 코드</span>${esc(d.codeLabel || d.title)} ${link(d.code, '열기', 'code')}</p>` : ''}</div>
+      <h3><span class="dx-n">${esc(d.effectLabel)} <b>${esc(d.effect)}</b></span>${esc(d.title)}</h3>
+      <div><p>${esc(d.why)}</p>${d.alt ? `<p class="f-sub"><span>버린 대안</span>${esc(d.alt)}. ${esc(d.altWhy)}</p>` : ''}${d.cost ? `<p class="f-sub"><span>감수한 것</span>${esc(d.cost)}</p>` : ''}${d.basis ? `<p class="f-sub"><span>측정</span>${esc(d.basis)}</p>` : ''}${d.code && d.code !== '#' ? `<p class="f-sub"><span>구현 코드</span>${esc(d.codeLabel || d.title)} ${link(d.code, '열기', 'code')}</p>` : ''}</div>
     </li>`).join('')}</ol>
   </section>
 
@@ -256,7 +252,7 @@ ${(c.failures || []).length ? `
     <ul class="fail">${c.failures.map(x => `<li><p class="f-h"><b>${esc(x.what)}</b><span class="st" data-st="${esc(x.status)}">${esc(x.status)}</span></p>${x.cause ? `<p class="f-sub"><span>원인</span>${esc(x.cause)}</p>` : ''}<p class="f-sub"><span>증상</span>${esc(x.repro)}</p><p class="f-sub"><span>조치</span>${esc(x.fix)}</p><p class="f-sub"><span>검증</span>${esc(x.verify || '미검증')}</p></li>`).join('')}</ul>
   </section>` : ''}
   <section class="cs"><h2>팀에서 내가 맡은 범위</h2>
-    <div class="two">${c.roleSplit.map(r => `<div class="${r.who === '나' ? 'me' : 'team'}"><p class="lbl">${r.who === '나' ? '내가 한 일' : '팀이 한 일'}</p><ul class="plain">${[].concat(r.what).map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>`).join('')}</div>
+    <dl class="setup roles">${c.roleSplit.map(r => `<div class="${r.who === '나' ? 'me' : 'team'}"><dt>${r.who === '나' ? '내가 한 일' : '팀이 한 일'}</dt><dd>${[].concat(r.what).map(esc).join(', ')}</dd></div>`).join('')}</dl>
   </section>
 ${c.slides.length ? `
   <section class="cs" id="slides"><h2>발표자료 ${c.slides.length}쪽</h2>

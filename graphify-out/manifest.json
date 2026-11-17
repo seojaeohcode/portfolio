@@ -18,27 +18,27 @@
     "semantic_hash": ""
   },
   "content/site.json": {
-    "mtime": 1794825703.8510385,
-    "seen": 1794826045.4235933,
-    "ast_hash": "a1c23d8822026ae853e95f51b1bd3101",
+    "mtime": 1794885822.7467678,
+    "seen": 1794885917.1303306,
+    "ast_hash": "0f9957d45395c51cea49cbb6e7d7895e",
     "semantic_hash": ""
   },
   "scripts/build.mjs": {
-    "mtime": 1794826029.2068036,
-    "seen": 1794826045.423595,
-    "ast_hash": "76016f1dabfb6d7a9c12f495c1753b00",
+    "mtime": 1794885822.7527664,
+    "seen": 1794885917.1303346,
+    "ast_hash": "ce31b084af5925c877c35d9c1cf57cfb",
     "semantic_hash": ""
   },
   "src/app.js": {
-    "mtime": 1794804978.6581016,
-    "seen": 1794806097.1636796,
-    "ast_hash": "1ac841a841854ed0dea37ad3c76cd7b9",
+    "mtime": 1794885822.7587776,
+    "seen": 1794885917.1303377,
+    "ast_hash": "221b035f017a7d58f80b29e0ea37a2e0",
     "semantic_hash": ""
   },
   "tools/cx.sh": {
-    "mtime": 1794747088.7815158,
-    "seen": 1794748086.267378,
-    "ast_hash": "60df4bb31b30178fb9bd17eca7127fdb",
+    "mtime": 1794885822.7677767,
+    "seen": 1794885917.1303403,
+    "ast_hash": "bbcfc124906bf425f2aa9811b29f2267",
     "semantic_hash": ""
   },
   "tools/shot.ps1": {
@@ -216,9 +216,9 @@
     "semantic_hash": ""
   },
   "assets/media/tidemark.mp4": {
-    "mtime": 1794751413.7052197,
-    "seen": 1794751954.5550237,
-    "ast_hash": "36abd70b8c49a217deeb5a9ad6be3cfa",
+    "mtime": 1794885822.7417684,
+    "seen": 1794885917.13044,
+    "ast_hash": "2d3f7e4b9f33d666b55c6202c308523c",
     "semantic_hash": ""
   },
   "docs/research/A-hr.md": {
@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "docs/research/SYNTHESIS.md": {
-    "mtime": 1794826042.8364644,
-    "seen": 1794826045.4236329,
-    "ast_hash": "bc37178b246c4754c45ee1a4ec37b2b0",
+    "mtime": 1794860535.27447,
+    "seen": 1794885917.130417,
+    "ast_hash": "bd1ba6b733365a85ff4e64a3a967da21",
     "semantic_hash": ""
   },
   "docs/research/F-bigco-youtube.md": {
@@ -267,6 +267,12 @@
     "mtime": 1794804150.0238993,
     "seen": 1794806097.1637516,
     "ast_hash": "8a527305be6cfb955e380e52af8bb4cf",
+    "semantic_hash": ""
+  },
+  "tools/layout-audit.mjs": {
+    "mtime": 1794885683.3627565,
+    "seen": 1794885917.1303465,
+    "ast_hash": "4c7dd1f33453b8a6004a32521aaff995",
     "semantic_hash": ""
   }
 }

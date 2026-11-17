@@ -374,7 +374,7 @@
       ],
       "media": {
         "type": "image",
-        "src": "assets/media/furrow-thumb.webp",
+        "src": "assets/media/furrow.webp",
         "alt": "잎 사진 판별 결과와 방제 일정 화면",
         "thumb": "assets/media/furrow-thumb.webp",
         "caption": "판별 결과: 병명과 확신도, 비 오는 날을 건너뛴 7일 방제 일정",
